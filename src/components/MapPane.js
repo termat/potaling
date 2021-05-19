@@ -103,7 +103,7 @@ export const changeStyle=(style)=>{
         if(targetRoute)updateGeojsonLayer(map);
     });
 };
-
+/*
 const viewState = {
     width: window.innerWidth,
     height: window.innerHeight,
@@ -113,7 +113,7 @@ const viewState = {
     maxZoom: 18,
     pitch: 65
  };
-
+*/
 export default class MapPane extends Component {
     static SAT='mapbox://styles/mapbox/satellite-v9';
     static STD='/potaling/std.json';
