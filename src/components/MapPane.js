@@ -4,8 +4,6 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import './MapPane.css';
 import {Deck} from '@deck.gl/core';
 import * as turf from '@turf/turf'
-import MapboxWorker from 'mapbox-gl/dist/mapbox-gl-csp-worker';
-mapbox.workerClass = MapboxWorker;
 
 let targetRoute;
 let cameraRoute;
@@ -135,13 +133,13 @@ export default class MapPane extends Component {
             interactive: true,
             localIdeographFontFamily: false
         });
-
+/*
         this.deckgl = new Deck({
             gl: map.painter.context.gl,
             layers: [],
             initialViewState:viewState
         });
-
+*/
         map.addControl(new mapbox.FullscreenControl());
         map.addControl(new mapbox.NavigationControl());
 
