@@ -12,7 +12,7 @@ import * as d3 from 'd3';
 const itemData = [];
 
 const fileRead=(data)=>{
-  let url="/geojson/"+data.target.alt;
+  let url="https://termat.github.io/potaling/geojson/"+data.target.alt;
   axios.get(url)
   .then(res => {
     const val = res.data;
