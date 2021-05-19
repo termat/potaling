@@ -4,6 +4,8 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import './MapPane.css';
 import {Deck} from '@deck.gl/core';
 import * as turf from '@turf/turf'
+import MapboxWorker from 'mapbox-gl/dist/mapbox-gl-csp-worker';
+mapbox.workerClass = MapboxWorker;
 
 let targetRoute;
 let cameraRoute;
