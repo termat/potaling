@@ -134,7 +134,6 @@ export default class MapPane extends Component {
         map.addControl(new mapbox.NavigationControl());
 
         map.on('load', () => {
-            map.resize();
             setTerrain(map);
             setSky(map);
             setGeojsonLayer(map);

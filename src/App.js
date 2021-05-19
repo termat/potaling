@@ -1,5 +1,4 @@
 import React from 'react';
-import { renderToString } from 'react-dom/server';
 import Dashboard from './components/Dashboard';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 
