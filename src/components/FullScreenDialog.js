@@ -75,12 +75,12 @@ export default function FullScreenDialog() {
           </Toolbar>
         </AppBar>
         <div>
-          <img src={`${process.env.PUBLIC_URL}/images/back.jpg`} style={img_style} />
+          <img src={`${process.env.PUBLIC_URL}/images/back.jpg`} style={img_style} alt={'top'} />
           <Box textAlign="center">
-          <h1>折り畳み自転車『Brompton』で『ポタリング』した記録を表示する実験サイトです。</h1>
-          <p style={{fontSize: "20px"}}>ポタリングした地域を鳥瞰で眺めてみたいと思い作成した、経路記録（Geojson）を3D地図に表示するWebアプリです。<br />
-          ポタリングした経路を3D地図のアニメーションで閲覧することができます。<br />
-            登録データの他、任意のGeojson(Point)を読み込んで3D地図に表示することもできます。</p>
+          <h1>『Brompton』で『ポタリング』した経路を俯瞰する実験サイトです。</h1>
+          <p style={{fontSize: "20px"}}>ポタリングした地域を鳥瞰で眺めてみたいと思い作成した、走行経路を3D地図に表示するWebアプリです。<br />
+          作者が自転車で散歩した経路を3D地図で閲覧することができます。<br />
+            また、任意の経路情報（Geojson/Point）を読み込んで3D地図に表示することもできます。</p>
           <Button variant="contained" size="large" onClick={handleClose}>開　始</Button>
           </Box>
         </div>

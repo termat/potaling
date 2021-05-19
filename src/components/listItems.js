@@ -12,7 +12,8 @@ import * as d3 from 'd3';
 const itemData = [];
 
 const fileRead=(data)=>{
-  let url="https://termat.github.io/potaling/geojson/"+data.target.alt;
+//  let url="https://termat.github.io/potaling/geojson/"+data.target.alt;
+  let url="/potaling/geojson/"+data.target.alt;
   axios.get(url)
   .then(res => {
     const val = res.data;
@@ -23,7 +24,8 @@ const fileRead=(data)=>{
 
 export default class MainListItems extends Component{
   componentDidMount() {
-    d3.csv("pota_data.csv", function(data) {
+    let url="/potaling/pota_data.csv";
+    d3.csv(url, function(data) {
       itemData.push(data);
     });
   }
@@ -61,5 +63,4 @@ export default class MainListItems extends Component{
     </div>
     );
   }
-
 }

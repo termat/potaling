@@ -4,9 +4,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import './MapPane.css';
 import {Deck} from '@deck.gl/core';
 import * as turf from '@turf/turf'
-import SunCalc from 'suncalc'
 
-const view_date = new Date(2021, 5, 15, 12, 0, 0);
 let targetRoute;
 let cameraRoute;
 let map;
@@ -95,7 +93,8 @@ export const fitBounds=()=>{
     ]);
 };
 
-export const changeStyle=(style)=>{   
+export const changeStyle=(style)=>{
+ console.log(style);
     map.setStyle(style);
     map.on('style.load', () => {
         map.resize();
@@ -105,9 +104,19 @@ export const changeStyle=(style)=>{
     });
 };
 
+const viewState = {
+    width: window.innerWidth,
+    height: window.innerHeight,
+    longitude: 139.692704,
+    latitude: 35.689526,
+    zoom: 14,
+    maxZoom: 18,
+    pitch: 65
+ };
+
 export default class MapPane extends Component {
     static SAT='mapbox://styles/mapbox/satellite-v9';
-    static STD='std.json';
+    static STD='/potaling/std.json';
 
     componentDidMount() {
         map = new mapbox.Map({
@@ -127,7 +136,8 @@ export default class MapPane extends Component {
 
         this.deckgl = new Deck({
             gl: map.painter.context.gl,
-            layers: []
+            layers: [],
+            initialViewState:viewState
         });
 
         map.addControl(new mapbox.FullscreenControl());
@@ -280,32 +290,13 @@ const setSky=(mapobj)=>{
         mapobj.addLayer({
             'id': 'sky',
             'type': 'sky',
-            'sky-type': 'solarNoon',
             'paint': {
-                'sky-opacity': [
-                    'interpolate',
-                    ['linear'],
-                    ['zoom'],
-                    0, 0, 5, 0.3, 8, 1
-                ],
-                'sky-type': 'atmosphere',
-                'sky-atmosphere-sun': getSunPosition(mapobj),
-                'sky-atmosphere-sun-intensity': 5
+            'sky-type': 'atmosphere',
+            'sky-atmosphere-sun': [0.0, 0.0],
+            'sky-atmosphere-sun-intensity': 15
             }
         });
     }
-};
-
-const getSunPosition=(mapobj)=>{
-    let center = mapobj.getCenter();
-    let sunPos = SunCalc.getPosition(
-        view_date || Date.now(),
-        center.lat,
-        center.lng
-    );
-    let sunAzimuth = 180 + (sunPos.azimuth * 180) / Math.PI;
-    let sunAltitude = 90 - (sunPos.altitude * 180) / Math.PI;
-    return [sunAzimuth, sunAltitude];
 };
 
 const checkView=()=>{

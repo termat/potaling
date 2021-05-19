@@ -100,7 +100,6 @@ let sarch_str;
 
 const setSearchValue=(str)=>{
   sarch_str=str;
-  console.log(sarch_str);
 }
 
 const search=()=>{
@@ -181,7 +180,15 @@ export default function Dashboard() {
               <SearchIcon />
             </IconButton>
             </Tooltip>
-            <TextField id="input-search" label="検索" size="small" style={{background:'white'}} onChange={(event) => setSearchValue(event.target.value)} />
+            <TextField id="input-search" label="検索" size="small" 
+                style={{background:'white'}} 
+                onChange={(event) => setSearchValue(event.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    search();
+                  }
+               }} 
+            />
           <Divider orientation="vertical" flexItem />
           <Tooltip title="Geojson読込" placement="bottom">
             <IconButton color="inherit" onClick={fileRead}>
@@ -245,7 +252,7 @@ export default function Dashboard() {
       </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
-        <Container maxWidth="xl" className={classes.container} onClick={handleDrawerClose}>
+        <Container maxWidth="xl" className={classes.container} onClick={handleDrawerClose} >
           <MapPane />
           <ControlPanerl /> 
         </Container>
