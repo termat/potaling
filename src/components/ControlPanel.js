@@ -15,7 +15,7 @@ export default class ControlPanerl extends Component {
         return <div style={style}>
              <Divider />
       <Tooltip title="視点の高さ" placement="right">
-      <ListItem button>
+      <ListItem>
         <ListItemIcon>
           <CameraAltIcon />
         </ListItemIcon>
@@ -28,12 +28,13 @@ export default class ControlPanerl extends Component {
           marks
           min={200}
           max={2000}
+          onChange={onChangeVal}
           style={{marginLeft:'0.8rem'}}
         />
       </ListItem>
       </Tooltip>
       <Tooltip title="視点の方向" placement="right">
-      <ListItem button>
+      <ListItem>
         <ListItemIcon>
           <FlipCameraIosIcon onClick={changeDuration} />
         </ListItemIcon>
@@ -46,12 +47,13 @@ export default class ControlPanerl extends Component {
           marks
           min={0}
           max={360}
+          onChange={onChangeVal}
           style={{marginLeft:'0.8rem'}}
         />
       </ListItem>
       </Tooltip>
       <Tooltip title="移動時間" placement="right">
-      <ListItem button>
+      <ListItem>
         <ListItemIcon>
           <SwitchCameraIcon />
         </ListItemIcon>
@@ -64,6 +66,7 @@ export default class ControlPanerl extends Component {
           marks
           min={80}
           max={360}
+          onChange={onChangeVal}
           style={{marginLeft:'0.8rem'}}
         />
       </ListItem>
@@ -72,16 +75,25 @@ export default class ControlPanerl extends Component {
     }
 }
 
+let isChange=false;
+
+const onChangeVal=()=>{
+  isChange=true;  
+}
+
 const onChangeHeight=(value)=>{
-    changeHeight(value);
+    if(isChange)changeHeight(value);
+    isChange=false;
 };
   
 const onChangeAngle=(value)=>{
-    changeAngle(value);
+  if(isChange)changeAngle(value);
+    isChange=false;
 };
   
 const onChangeDuration=(value)=>{
-    changeDuration(value*1000);
+  if(isChange)changeDuration(value*1000);
+    isChange=false;
 };
 
 const style = {

@@ -40,6 +40,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
   },
   appBar: {
+    height:'65px',
     transition: theme.transitions.create(['margin', 'width'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
@@ -71,7 +72,6 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     padding: theme.spacing(0, 1),
-    // necessary for content to be below app bar
     ...theme.mixins.toolbar,
     justifyContent: 'flex-end',
   },
@@ -154,7 +154,6 @@ export default function Dashboard() {
     <div className={classes.root}>
       <CssBaseline />
       <AppBar
-        position="fixed"
         className={clsx(classes.appBar, {
           [classes.appBarShift]: open,
         })}
@@ -170,7 +169,7 @@ export default function Dashboard() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            ポタリングの記録（実験版）
+            ポタリングの記録
           </Typography>
           <div className={classes.toolbarButtons}>
           <Grid container alignItems="center" className={classes.root}>
@@ -250,8 +249,12 @@ export default function Dashboard() {
         <List><MainListItems /></List>
         <Divider />
       </Drawer>
-      <main className={classes.content}>
-        <div className={classes.appBarSpacer} />
+      <main
+        className={clsx(classes.content, {
+          [classes.contentShift]: open,
+        })}
+      >
+        <div className={classes.drawerHeader} />
         <Container maxWidth="xl" className={classes.container} onClick={handleDrawerClose} >
           <MapPane />
           <ControlPanerl /> 

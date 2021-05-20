@@ -364,7 +364,6 @@ const frame=(time)=>{
         lat: alongRoute[1]
     });
     map.setFreeCameraOptions(camera);
-
     let point = {
         'type': 'FeatureCollection',
         'features': [{
