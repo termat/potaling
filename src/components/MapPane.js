@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
-import mapbox from 'mapbox-gl';
+//import mapbox from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './MapPane.css';
 import {Deck} from '@deck.gl/core';
 import * as turf from '@turf/turf'
+
+import mapbox from 'mapbox-gl/dist/mapbox-gl-csp';
+import MapboxWorker from 'mapbox-gl/dist/mapbox-gl-csp-worker';
+mapbox.workerClass = MapboxWorker;
 
 let targetRoute;
 let cameraRoute;
@@ -142,7 +146,7 @@ export default class MapPane extends Component {
 
         map.addControl(new mapbox.FullscreenControl());
         map.addControl(new mapbox.NavigationControl());
-
+        
         map.on('load', () => {
             setTerrain(map);
             setSky(map);
