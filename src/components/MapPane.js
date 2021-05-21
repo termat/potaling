@@ -6,7 +6,8 @@ import {Deck} from '@deck.gl/core';
 import * as turf from '@turf/turf'
 
 import mapbox from 'mapbox-gl/dist/mapbox-gl-csp';
-import MapboxWorker from 'mapbox-gl/dist/mapbox-gl-csp-worker';
+// eslint-disable-next-line import/no-webpack-loader-syntax
+import MapboxWorker from 'worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker';
 mapbox.workerClass = MapboxWorker;
 
 let targetRoute;
