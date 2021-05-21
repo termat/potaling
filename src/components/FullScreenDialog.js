@@ -66,7 +66,7 @@ export default function FullScreenDialog() {
               <DirectionsBikeIcon />
             </IconButton>
             <Typography variant="h6" className={classes.title} onClick={handleClose}>
-              ポタリングの記録（実験版）
+              ポタリングの記録
             </Typography>
             <CloseIcon onClick={handleClose} />
             <Button color="inherit" onClick={handleClose}>
@@ -77,11 +77,12 @@ export default function FullScreenDialog() {
         <div>
           <img src={`${process.env.PUBLIC_URL}/images/back.jpg`} style={img_style} alt={'top'} />
           <Box textAlign="center">
-          <h1>『Brompton』で『ポタリング』した経路を俯瞰する実験サイトです。</h1>
-          <p style={{fontSize: "20px"}}>ポタリングした地域を鳥瞰で眺めてみたいと思い作成した、走行経路を3D地図に表示するWebアプリです。<br />
-          作者が自転車で散歩した経路を3D地図で閲覧することができます。<br />
-            また、任意の経路情報（Geojson/Point）を読み込んで3D地図に表示することもできます。</p>
-          <Button variant="contained" size="large" onClick={handleClose}>開　始</Button>
+          <h1>ポタリングした地域を3D地図で俯瞰する実験サイトです。</h1>
+          <p style={{fontSize: "20px"}}>ポタリング（自転車散歩）した地域を俯瞰してみたいと思い作成したWebアプリです。<br />
+            データ（geojson）を読み込むと、3D地図上で経路をトレースすることもできます。<br />
+            実際に走った経路を俯瞰してみると小さな発見があって結構面白いです。</p>
+          <Button variant="contained" style={{margin:"10px"}} size="large" onClick={handleClose}>　開　始　</Button>
+          <Button variant="contained" style={{margin:"10px"}}  size="large" color="primary">　使い方　</Button>
           </Box>
         </div>
         <br />

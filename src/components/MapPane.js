@@ -11,12 +11,10 @@ import MapboxWorker from 'worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker';
 mapbox.workerClass = MapboxWorker;
 
 let targetRoute;
-let cameraRoute;
 let map;
 let animationDuration = 240000;
 let cameraAltitude = 500;
 let routeDistance;
-let cameraRouteDistance;
 let start;
 let running=false;
 let phase;
@@ -27,16 +25,25 @@ export const jumpTo=(data)=>{
     map.jumpTo({center: data});
 };
 
+const propcLine=(c)=>{
+    c.forEach(e =>{
+        targetRoute.push(e);
+    });
+}
+
 export const parseGeojson=(str)=>{
     stopMovie();
     let json=JSON.parse(str);
     targetRoute=[];
-    cameraRoute=[];
+
     let array=json.features;
     array.forEach(e => {
         let c=e.geometry.coordinates;
-        targetRoute.push(c);
-        cameraRoute.push(c);
+        if(e.geometry.type==="Point"){
+            targetRoute.push(c);
+        }else if(e.geometry.type==="LineString"){
+            propcLine(c);
+        }
     });
     if (map.getLayer('line'))map.removeLayer('line');
     if (map.getSource('trace'))map.removeSource('trace');
@@ -63,7 +70,12 @@ export const changeAngle=(val)=>{
 };
 
 export const changeDuration=(val)=>{
+    let tmp=animationDuration;
     animationDuration=val;
+    if(phase>0.0){
+        let tt=phase*tmp+start;
+        phase = (tt - start) / animationDuration;
+    }
 };
 
 export const rewind=()=>{
@@ -122,6 +134,26 @@ const viewState = {
 export default class MapPane extends Component {
     static SAT='mapbox://styles/mapbox/satellite-v9';
     static STD='/potaling/std.json';
+    static PHT= {
+            "version": 8,
+            "sources": {
+                "t_pale": {
+                    "type": "raster",
+                    "tiles": [
+                        "https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg"
+                    ],
+                    "tileSize": 256,
+                    "attribution": "<a href='https://maps.gsi.go.jp/development/ichiran.html'>地理院タイル（全国最新写真）</a>"
+                }
+            },
+            "layers": [{
+                "id": "t_pale",
+                "type": "raster",
+                "source": "t_pale",
+                "minzoom": 0,
+                "maxzoom": 18
+            }]
+        };
 
     componentDidMount() {
         map = new mapbox.Map({
@@ -273,13 +305,13 @@ const setGeojsonLayer=(mapobj)=>{
                 'circle-stroke-opacity': 0.05
             },
         });
-        routeDistance = turf.lineDistance(turf.lineString(targetRoute));
-        cameraRouteDistance = turf.lineDistance(turf.lineString(cameraRoute));
+        routeDistance = turf.length(turf.lineString(targetRoute));
     }
 };
 
 const setTerrain=(mapobj)=>{
     if (!mapobj.getSource('mapbox-dem')){
+
         mapobj.addSource('mapbox-dem', {
             'type': 'raster-dem',
             'url': 'mapbox://mapbox.mapbox-terrain-dem-v1',
@@ -287,6 +319,19 @@ const setTerrain=(mapobj)=>{
             'maxzoom': 14
         });
         mapobj.setTerrain({ 'source': 'mapbox-dem', 'exaggeration': 1.5 });
+/*
+        mapobj.addSource('gsi-dem', {
+            "type": "raster-dem",
+            "encoding": "gsi",
+            "tiles": [
+                "https://cyberjapandata.gsi.go.jp/xyz/dem_png/{z}/{x}/{y}.png"
+            ],
+            "tileSize": 256,
+            "maxzoom": 14,
+            "attribution": '<a href="https://maps.gsi.go.jp/development/ichiran.html#dem" target="_blank">地理院標高タイル</a>'
+        });
+*/
+
     }
 };
 
@@ -311,14 +356,10 @@ const checkView=()=>{
         turf.lineString(targetRoute),
         routeDistance * phase
     ).geometry.coordinates;
-    let alongCamera = turf.along(
-        turf.lineString(cameraRoute),
-        cameraRouteDistance * phase
-    ).geometry.coordinates;
     let camera = map.getFreeCameraOptions();
     camera.position = mapbox.MercatorCoordinate.fromLngLat({
-        lng: alongCamera[0]+camera_angle[0],
-        lat: alongCamera[1]+camera_angle[1]
+        lng: alongRoute[0]+camera_angle[0],
+        lat: alongRoute[1]+camera_angle[1]
         },
         cameraAltitude
     ); 
@@ -346,21 +387,18 @@ const frame=(time)=>{
     phase = (time - start) / animationDuration;
     if (phase > 1) {
         setTimeout(function () {
-            start = 0.0;
+            start=0.0;
+            running=false;
         }, 1500);
     }
     let alongRoute = turf.along(
         turf.lineString(targetRoute),
         routeDistance * phase
     ).geometry.coordinates;
-    let alongCamera = turf.along(
-        turf.lineString(cameraRoute),
-        cameraRouteDistance * phase
-    ).geometry.coordinates;
     let camera = map.getFreeCameraOptions();
     camera.position = mapbox.MercatorCoordinate.fromLngLat({
-        lng: alongCamera[0]-camera_angle[0],
-        lat: alongCamera[1]-camera_angle[1]
+        lng: alongRoute[0]-camera_angle[0],
+        lat: alongRoute[1]-camera_angle[1]
         },
         cameraAltitude
     ); 

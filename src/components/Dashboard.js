@@ -126,15 +126,12 @@ const fileRead=()=>{
   fileInput.click();
 };
 
-let current_map=MapPane.SAT;
+let current_map=0;
+let MAPS=[MapPane.SAT,MapPane.PHT,MapPane.STD]
 
 const changeMap=()=>{
-  if(current_map===MapPane.SAT){
-    current_map=MapPane.STD
-  }else{
-    current_map=MapPane.SAT
-  }
-  changeStyle(current_map);
+  current_map=(current_map+1)%3;
+  changeStyle(MAPS[current_map]);
 }
 
 export default function Dashboard() {
