@@ -117,6 +117,7 @@ const fileRead=()=>{
   let fileReader = new FileReader();
   fileInput.onchange = () => {
       let file = fileInput.files[0];
+      if(!file||!file.name)return;
       console.log(file.name);
       console.log(file.size);
       console.log(file.type);
@@ -218,7 +219,7 @@ export default function Dashboard() {
               <PauseCircleFilledIcon />
             </IconButton>
             </Tooltip>
-            <Tooltip title="出発点に戻る" placement="bottom">
+            <Tooltip title="戻る" placement="bottom">
             <IconButton color="inherit" onClick={rewind}>
               <SkipPreviousIcon />
             </IconButton>

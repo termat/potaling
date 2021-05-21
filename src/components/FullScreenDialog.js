@@ -11,6 +11,7 @@ import DirectionsBikeIcon from '@material-ui/icons/DirectionsBike';
 import Slide from '@material-ui/core/Slide';
 import Link from '@material-ui/core/Link';
 import Box from '@material-ui/core/Box';
+import YotubeDialog from './SimpleDialog'
 
 function Copyright() {
   return (
@@ -68,6 +69,8 @@ export default function FullScreenDialog() {
             <Typography variant="h6" className={classes.title} onClick={handleClose}>
               ポタリングの記録
             </Typography>
+            <div style={{marginRight:"10px"}} ><Follow /></div>
+            <div style={{marginRight:"30px"}}><a href="https://twitter.com/share" className="twitter-share-button" style={{marginRight:"20px"}}>Tweet</a></div>
             <CloseIcon onClick={handleClose} />
             <Button color="inherit" onClick={handleClose}>
               Close
@@ -82,7 +85,7 @@ export default function FullScreenDialog() {
             データ（geojson）を読み込むと、3D地図上で経路をトレースすることもできます。<br />
             実際に走った経路を俯瞰してみると小さな発見があって結構面白いです。</p>
           <Button variant="contained" style={{margin:"10px"}} size="large" onClick={handleClose}>　開　始　</Button>
-          <Button variant="contained" style={{margin:"10px"}}  size="large" color="primary">　使い方　</Button>
+          <YotubeDialog />
           </Box>
         </div>
         <br />
@@ -91,3 +94,18 @@ export default function FullScreenDialog() {
     </div>
   );
 }
+
+let isLoadwidgets = false;
+const Follow = () => {
+  React.useEffect(() => {
+    if (!isLoadwidgets) {
+      const s = document.createElement("script");
+      s.setAttribute("src", "https://platform.twitter.com/widgets.js");
+      document.body.appendChild(s);
+      isLoadwidgets = true;
+    }
+  }, []);
+  return (
+    <a href="https://twitter.com/t_mat?ref_src=twsrc%5Etfw" className="twitter-follow-button" data-show-count="false">Follow @t_mat</a>
+  );
+};

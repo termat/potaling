@@ -166,7 +166,7 @@ export default class MapPane extends Component {
             maxZoom: 18,
             minZoom: 8,
             pitch: 65,
-            bearing: -180,
+            bearing: 0,
             interactive: true,
             localIdeographFontFamily: false
         });
