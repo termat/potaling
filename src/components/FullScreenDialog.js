@@ -51,6 +51,7 @@ export default function FullScreenDialog() {
   const [open, setOpen] = React.useState(true);
 
   handleDialogOpen = () => {
+    isLoadwidgets=false;
     setOpen(true);
   };
 
