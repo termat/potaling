@@ -111,10 +111,11 @@ export const fitBounds=()=>{
 };
 
 export const changeStyle=(style)=>{
- console.log(style);
+    if(style.terrain){
+        delete style.terrain
+    }    
     map.setStyle(style);
     map.on('style.load', () => {
-        map.resize();
         setTerrain(map);
         setSky(map);
         if(targetRoute)updateGeojsonLayer(map);
@@ -311,7 +312,6 @@ const setGeojsonLayer=(mapobj)=>{
 
 const setTerrain=(mapobj)=>{
     if (!mapobj.getSource('mapbox-dem')){
-
         mapobj.addSource('mapbox-dem', {
             'type': 'raster-dem',
             'url': 'mapbox://mapbox.mapbox-terrain-dem-v1',
