@@ -12,6 +12,7 @@ import Slide from '@material-ui/core/Slide';
 import Link from '@material-ui/core/Link';
 import Box from '@material-ui/core/Box';
 import YotubeDialog from './SimpleDialog'
+import {setup} from './Dashboard'
 
 function Copyright() {
   return (
@@ -57,6 +58,7 @@ export default function FullScreenDialog() {
 
   const handleClose = () => {
     setOpen(false);
+    setup();
   };
 
   return (

@@ -135,6 +135,9 @@ const changeMap=()=>{
   changeStyle(MAPS[current_map]);
 }
 
+export let setup;
+
+
 export default function Dashboard() {
   const classes = useStyles();
   const theme = useTheme();
@@ -146,6 +149,11 @@ export default function Dashboard() {
 
   const handleDrawerClose = () => {
     setOpen(false);
+  };
+
+  setup=()=>{
+    handleDrawerOpen();
+    setTimeout(handleDrawerClose,1000);
   };
 
   return (
