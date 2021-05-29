@@ -307,6 +307,7 @@ const setGeojsonLayer=(mapobj)=>{
             },
         });
         routeDistance = turf.length(turf.lineString(targetRoute));
+        console.log(routeDistance);
     }
 };
 
@@ -387,7 +388,6 @@ const frame=(time)=>{
     phase = (time - start) / animationDuration;
     if (phase > 1) {
         setTimeout(function () {
-            start=0.0;
             running=false;
         }, 1500);
     }
