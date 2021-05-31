@@ -4,8 +4,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import Divider from '@material-ui/core/Divider';
 import CameraAltIcon from '@material-ui/icons/CameraAlt';
 import FlipCameraIosIcon from '@material-ui/icons/FlipCameraIos';
-import SwitchCameraIcon from '@material-ui/icons/SwitchCamera';
-import {changeHeight,changeDuration,changeAngle} from './MapPane'
+import {changeHeight,changeAngle} from './MapPane'
 import Tooltip from '@material-ui/core/Tooltip';
 import Slider from '@material-ui/core/Slider';
 
@@ -36,7 +35,7 @@ export default class ControlPanerl extends Component {
       <Tooltip title="視点の方向" placement="right">
       <ListItem>
         <ListItemIcon>
-          <FlipCameraIosIcon onClick={changeDuration} />
+          <FlipCameraIosIcon />
         </ListItemIcon>
         <Slider
           defaultValue={0}
@@ -52,26 +51,7 @@ export default class ControlPanerl extends Component {
         />
       </ListItem>
       </Tooltip>
-      <Tooltip title="移動時間" placement="right">
-      <ListItem>
-        <ListItemIcon>
-          <SwitchCameraIcon />
-        </ListItemIcon>
-        <Slider
-          defaultValue={300}
-          getAriaValueText={onChangeDuration}
-          aria-labelledby="discrete-slider"
-          valueLabelDisplay="auto"
-          step={20}
-          marks
-          min={80}
-          max={360}
-          onChange={onChangeVal}
-          style={{marginLeft:'0.8rem'}}
-        />
-      </ListItem>
-      </Tooltip>
-        </div>;
+      </div>;
     }
 }
 
@@ -88,11 +68,6 @@ const onChangeHeight=(value)=>{
   
 const onChangeAngle=(value)=>{
   if(isChange)changeAngle(value);
-    isChange=false;
-};
-  
-const onChangeDuration=(value)=>{
-  if(isChange)changeDuration(value*1000);
     isChange=false;
 };
 

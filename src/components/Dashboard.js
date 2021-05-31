@@ -15,16 +15,14 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import MainListItems from './listItems';
 import MapPane from './MapPane';
+import ControlBar from './ControlBar';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MapIcon from '@material-ui/icons/Map';
 import AllOutIcon from '@material-ui/icons/AllOut';
 import FolderOpenIcon from '@material-ui/icons/FolderOpen';
-import {rewind,startMovie,stopMovie,fitBounds,parseGeojson,changeStyle} from './MapPane'
+import {fitBounds,parseGeojson,changeStyle} from './MapPane'
 import FullScreenDialog from './FullScreenDialog'
 import {handleDialogOpen} from './FullScreenDialog'
-import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
-import PauseCircleFilledIcon from '@material-ui/icons/PauseCircleFilled';
-import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
 import Tooltip from '@material-ui/core/Tooltip';
 import Grid from '@material-ui/core/Grid';
 import ControlPanerl from './ControlPanel';
@@ -33,6 +31,7 @@ import TextField from '@material-ui/core/TextField';
 import axios from 'axios';
 import ResultDialog,{showResultList} from './SearchResultDialog'
 
+let gpxParser = require('gpxparser');
 const drawerWidth = 300;
 
 const useStyles = makeStyles((theme) => ({
@@ -112,23 +111,39 @@ const search=()=>{
   });
 };
 
+let fname;
+
 const fileRead=()=>{
   let fileInput = document.getElementById('file');
   let fileReader = new FileReader();
   fileInput.onchange = () => {
       let file = fileInput.files[0];
       if(!file||!file.name)return;
+      fname=file.name.toLowerCase();
       console.log(file.name);
       console.log(file.size);
       console.log(file.type);
       fileReader.readAsText(file);
   };
-  fileReader.onload = () => parseGeojson(fileReader.result);
+  fileReader.onload = () => fileProc(fileReader.result);
   fileInput.click();
 };
 
+const fileProc=(obj)=>{
+  if(fname.endsWith(".geojson")){
+      parseGeojson(obj);
+  }else if(fname.endsWith(".json")){
+    parseGeojson(obj);
+  }else if(fname.endsWith(".gpx")){
+    let gpx=new gpxParser();
+    gpx.parse(obj);
+    parseGeojson(JSON.stringify(gpx.toGeoJSON()));
+  }
+};
+
+
 let current_map=0;
-let MAPS=[MapPane.SAT,MapPane.PHT,MapPane.STD]
+let MAPS=[MapPane.PHT,MapPane.STD,MapPane.SAT];
 
 const changeMap=()=>{
   current_map=(current_map+1)%3;
@@ -136,7 +151,6 @@ const changeMap=()=>{
 }
 
 export let setup;
-
 
 export default function Dashboard() {
   const classes = useStyles();
@@ -217,22 +231,6 @@ export default function Dashboard() {
             </IconButton>
             </Tooltip>
             <Divider orientation="vertical" flexItem />
-            <Tooltip title="開始" placement="bottom">
-            <IconButton color="inherit" onClick={startMovie}>
-              <PlayCircleFilledIcon />
-            </IconButton>
-            </Tooltip>
-            <Tooltip title="停止" placement="bottom">
-            <IconButton color="inherit" onClick={stopMovie}>
-              <PauseCircleFilledIcon />
-            </IconButton>
-            </Tooltip>
-            <Tooltip title="戻る" placement="bottom">
-            <IconButton color="inherit" onClick={rewind}>
-              <SkipPreviousIcon />
-            </IconButton>
-            </Tooltip>
-            <Divider orientation="vertical" flexItem />
             </Grid>
           </div>
         </Toolbar>
@@ -264,6 +262,7 @@ export default function Dashboard() {
         <Container maxWidth="xl" className={classes.container} onClick={handleDrawerClose} >
           <MapPane />
           <ControlPanerl /> 
+          <ControlBar /> 
         </Container>
       </main>
       <FullScreenDialog />

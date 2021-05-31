@@ -4,6 +4,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import './MapPane.css';
 import {Deck} from '@deck.gl/core';
 import * as turf from '@turf/turf'
+import {setSlider,endRunning} from './ControlBar';
 
 import mapbox from 'mapbox-gl/dist/mapbox-gl-csp';
 // eslint-disable-next-line import/no-webpack-loader-syntax
@@ -12,14 +13,23 @@ mapbox.workerClass = MapboxWorker;
 
 let targetRoute;
 let map;
-let animationDuration = 240000;
 let cameraAltitude = 500;
 let routeDistance;
+let speed;
 let start;
 let running=false;
 let phase;
 let angle=0.0;
 let camera_angle=[-0.005,-0.005];
+let speedMul=1.0;
+
+export const setSpeed=(val)=>{
+    speedMul=val;
+}
+
+export const ieRunning=()=>{
+    return running;
+};
 
 export const jumpTo=(data)=>{
     map.jumpTo({center: data});
@@ -55,6 +65,12 @@ export const parseGeojson=(str)=>{
     phase=0.0;
 };
 
+export const setPhase=(val)=>{
+    phase=val;
+    if(phase===0.0)start=null;
+    if(targetRoute)requestAnimationFrame(frame);
+}
+
 export const changeHeight=(val)=>{
     cameraAltitude=val;
     if(!running)checkView();
@@ -68,20 +84,6 @@ export const changeAngle=(val)=>{
     ];
     if(!running)checkView();
 };
-
-export const changeDuration=(val)=>{
-    let tmp=animationDuration;
-    animationDuration=val;
-    if(phase>0.0){
-        let tt=phase*tmp+start;
-        phase = (tt - start) / animationDuration;
-    }
-};
-
-export const rewind=()=>{
-    start=null;
-    if(targetRoute)requestAnimationFrame(frame);
-}
 
 export const startMovie=()=>{
     running=true;
@@ -151,7 +153,7 @@ export default class MapPane extends Component {
                 "id": "t_pale",
                 "type": "raster",
                 "source": "t_pale",
-                "minzoom": 0,
+                "minzoom": 8,
                 "maxzoom": 18
             }]
         };
@@ -161,7 +163,7 @@ export default class MapPane extends Component {
             accessToken:'pk.eyJ1IjoidGVybWF0IiwiYSI6ImNqdXBmYXk1aDBwMnI0MW8xNXZ3dzVkOGUifQ.8nBCHZrBDS50yJbykEE4Sg',
             container: this.container,
             hash: true,
-            style: MapPane.SAT,
+            style: MapPane.PHT,
             center: [139.692704, 35.689526], 
             zoom: 14,
             maxZoom: 18,
@@ -169,7 +171,8 @@ export default class MapPane extends Component {
             pitch: 65,
             bearing: 0,
             interactive: true,
-            localIdeographFontFamily: false
+            localIdeographFontFamily: false,
+//            antialias: true 
         });
 
         this.deckgl = new Deck({
@@ -180,8 +183,31 @@ export default class MapPane extends Component {
 
         map.addControl(new mapbox.FullscreenControl());
         map.addControl(new mapbox.NavigationControl());
-        
+
         map.on('load', () => {
+/*
+            map.addLayer({
+                'id': 'vector-tile',
+                'type': 'line',
+                'minzoom': 8,
+                'maxzoom': 18,
+                'source': {
+                    'type':'vector',
+                    'tiles':[
+                        'https://cyberjapandata.gsi.go.jp/xyz/experimental_bvmap/{z}/{x}/{y}.pbf'
+                    ],
+                },
+                'source-layer': 'road',
+                    'layout': {
+                        'line-join': 'round',
+                        'line-cap': 'round',
+                    },
+                    'paint': {
+                        'line-color': '#ff69b4',
+                    'line-width': 3
+                }
+            });
+*/
             setTerrain(map);
             setSky(map);
             setGeojsonLayer(map);
@@ -307,7 +333,7 @@ const setGeojsonLayer=(mapobj)=>{
             },
         });
         routeDistance = turf.length(turf.lineString(targetRoute));
-        console.log(routeDistance);
+        speed=1/((routeDistance/10)*60000);
     }
 };
 
@@ -384,11 +410,19 @@ const checkView=()=>{
 };
 
 const frame=(time)=>{
-    if (!start) start = time;
-    phase = (time - start) / animationDuration;
-    if (phase > 1) {
+    if (!start){
+        start = time;
+        phase=0.0;
+    }else{
+        let dd=time-start;
+        start=time;
+        phase=phase+speed*dd*speedMul;
+    }
+    setSlider(phase);
+    if (phase >= 1) {
         setTimeout(function () {
             running=false;
+            endRunning();
         }, 1500);
     }
     let alongRoute = turf.along(
