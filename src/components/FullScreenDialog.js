@@ -85,7 +85,7 @@ export default function FullScreenDialog() {
           <Box textAlign="center">
           <h1>ポタリングした地域を3D地図で俯瞰する実験サイトです。</h1>
           <p style={{fontSize: "20px"}}>ポタリング（自転車散歩）した地域を俯瞰してみたいと思い作成したWebアプリです。<br />
-            データ（geojson）を読み込むと、3D地図上で経路の俯瞰画像が表示されます。<br />
+            データ（geojson/gpx）を読み込むと、3D地図上で経路の俯瞰画像が表示されます。<br />
             実際に走った経路を俯瞰してみると小さな発見があって結構面白いです。</p>
           <Button variant="contained" style={{margin:"10px"}} size="large" onClick={handleClose}>　開　始　</Button>
           <YotubeDialog />
