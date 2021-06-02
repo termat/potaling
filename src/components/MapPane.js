@@ -23,6 +23,19 @@ let angle=0.0;
 let camera_angle=[-0.005,-0.005];
 let speedMul=1.0;
 
+
+const dem={
+    "type": "raster-dem",
+    "tiles": [
+//      "https://cyberjapandata.gsi.go.jp/xyz/dem_png/{z}/{x}/{y}.png"
+      "https://www.termat.net/dem/{z}/{x}/{y}"
+    ],
+    "tileSize": 256,
+    "maxzoom": 14,
+    "attribution": "<a href='https://maps.gsi.go.jp/development/ichiran.html'>地理院タイル</a>"
+  };
+
+
 export const setSpeed=(val)=>{
     speedMul=val;
 }
@@ -135,7 +148,7 @@ const viewState = {
  };
 
 export default class MapPane extends Component {
-    static SAT='mapbox://styles/mapbox/satellite-v9';
+//    static SAT='mapbox://styles/mapbox/satellite-v9';
     static STD='/potaling/std.json';
     static PHT= {
             "version": 8,
@@ -339,6 +352,7 @@ const setGeojsonLayer=(mapobj)=>{
 
 const setTerrain=(mapobj)=>{
     if (!mapobj.getSource('mapbox-dem')){
+        /*
         mapobj.addSource('mapbox-dem', {
             'type': 'raster-dem',
             'url': 'mapbox://mapbox.mapbox-terrain-dem-v1',
@@ -346,19 +360,9 @@ const setTerrain=(mapobj)=>{
             'maxzoom': 14
         });
         mapobj.setTerrain({ 'source': 'mapbox-dem', 'exaggeration': 1.5 });
-/*
-        mapobj.addSource('gsi-dem', {
-            "type": "raster-dem",
-            "encoding": "gsi",
-            "tiles": [
-                "https://cyberjapandata.gsi.go.jp/xyz/dem_png/{z}/{x}/{y}.png"
-            ],
-            "tileSize": 256,
-            "maxzoom": 14,
-            "attribution": '<a href="https://maps.gsi.go.jp/development/ichiran.html#dem" target="_blank">地理院標高タイル</a>'
-        });
-*/
-
+        */
+        mapobj.addSource('mapbox-dem', dem);
+        mapobj.setTerrain({ 'source': 'mapbox-dem', 'exaggeration': 1.5 });
     }
 };
 

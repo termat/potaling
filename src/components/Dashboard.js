@@ -26,10 +26,6 @@ import {handleDialogOpen} from './FullScreenDialog'
 import Tooltip from '@material-ui/core/Tooltip';
 import Grid from '@material-ui/core/Grid';
 import ControlPanerl from './ControlPanel';
-import SearchIcon from '@material-ui/icons/Search';
-import TextField from '@material-ui/core/TextField';
-import axios from 'axios';
-import ResultDialog,{showResultList} from './SearchResultDialog'
 
 let gpxParser = require('gpxparser');
 const drawerWidth = 300;
@@ -95,21 +91,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-let sarch_str;
-
-const setSearchValue=(str)=>{
-  sarch_str=str;
-}
-
-const search=()=>{
-  if(!sarch_str)return;
-  if(sarch_str.length<1)return;
-  let url="https://msearch.gsi.go.jp/address-search/AddressSearch?q="+sarch_str;
-  axios.get(url)
-  .then(res => {
-    showResultList(res.data);
-  });
-};
 
 let fname;
 
@@ -143,10 +124,10 @@ const fileProc=(obj)=>{
 
 
 let current_map=0;
-let MAPS=[MapPane.PHT,MapPane.STD,MapPane.SAT];
+let MAPS=[MapPane.PHT,MapPane.STD];
 
 const changeMap=()=>{
-  current_map=(current_map+1)%3;
+  current_map=(current_map+1)%2;
   changeStyle(MAPS[current_map]);
 }
 
@@ -193,21 +174,6 @@ export default function Dashboard() {
           </Typography>
           <div className={classes.toolbarButtons}>
           <Grid container alignItems="center" className={classes.root}>
-          <Divider orientation="vertical" flexItem />
-          <Tooltip title="検索" placement="bottom">
-            <IconButton color="inherit" onClick={search} >
-              <SearchIcon />
-            </IconButton>
-            </Tooltip>
-            <TextField id="input-search" label="検索" size="small" 
-                style={{background:'white'}} 
-                onChange={(event) => setSearchValue(event.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    search();
-                  }
-               }} 
-            />
           <Divider orientation="vertical" flexItem />
           <Tooltip title="Geojson読込" placement="bottom">
             <IconButton color="inherit" onClick={fileRead}>
@@ -266,7 +232,6 @@ export default function Dashboard() {
         </Container>
       </main>
       <FullScreenDialog />
-      <ResultDialog />
     </div>
   );
 }
