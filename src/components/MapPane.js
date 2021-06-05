@@ -173,7 +173,7 @@ export default class MapPane extends Component {
 
     componentDidMount() {
         map = new mapbox.Map({
-            accessToken:'pk.eyJ1IjoidGVybWF0IiwiYSI6ImNqdXBmYXk1aDBwMnI0MW8xNXZ3dzVkOGUifQ.8nBCHZrBDS50yJbykEE4Sg',
+            accessToken:'pk.eyJ1IjoidGVybWF0IiwiYSI6ImNrcGprNXE2ajBjdmQybnFyMmI5d3lrN2UifQ.EyZTUEX49xUnq6i2y0Na2Q',
             container: this.container,
             hash: true,
             style: MapPane.PHT,
