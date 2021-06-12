@@ -122,12 +122,11 @@ const fileProc=(obj)=>{
   }
 };
 
-
 let current_map=0;
-let MAPS=[MapPane.PHT,MapPane.STD];
+let MAPS=[MapPane.PHT,MapPane.STD,MapPane.SAT];
 
 const changeMap=()=>{
-  current_map=(current_map+1)%2;
+  current_map=(current_map+1)%MAPS.length;
   changeStyle(MAPS[current_map]);
 }
 

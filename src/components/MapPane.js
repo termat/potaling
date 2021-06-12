@@ -148,7 +148,7 @@ const viewState = {
  };
 
 export default class MapPane extends Component {
-//    static SAT='mapbox://styles/mapbox/satellite-v9';
+    static SAT='mapbox://styles/mapbox/satellite-v9';
     static STD='/potaling/std.json';
     static PHT= {
             "version": 8,
