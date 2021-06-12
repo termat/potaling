@@ -123,7 +123,8 @@ const fileProc=(obj)=>{
 };
 
 let current_map=0;
-let MAPS=[MapPane.PHT,MapPane.STD,MapPane.SAT];
+//let MAPS=[MapPane.PHT,MapPane.STD,MapPane.SAT];
+let MAPS=[MapPane.PHT,MapPane.STD];
 
 const changeMap=()=>{
   current_map=(current_map+1)%MAPS.length;
