@@ -191,6 +191,13 @@ export default class MapPane extends Component {
             setGeojsonLayer(map);
         });
 
+        map.on('touchstart', (e)=> {
+            pointer=e.point;
+        });
+        map.on('touchend', (e)=> {
+            pointer=null;
+        });
+
         map.on('mousedown', (e)=> {
             pointer=e.point;
         });
@@ -201,33 +208,10 @@ export default class MapPane extends Component {
             pointer=null;
         });
         map.on('mousemove', (e)=> {
-            if(running&&pointer){
-                let x0=pointer.x;
-                let y0=pointer.y;
-                let x1=e.point.x;
-                let y1=e.point.y;
-                if(y1>y0){
-                    cameraAltitude=Math.min(2000,cameraAltitude+20);
-                }else{
-                    cameraAltitude=Math.max(200,cameraAltitude-20);
-                }
-                if(x1>x0){
-                    angleVal=(angleVal+2)%360;
-                    angle=(angleVal/180.0)*Math.PI;
-                    camera_angle=[
-                        -0.005*Math.cos(angle)-(-0.005)*Math.sin(angle),
-                        -0.005*Math.sin(angle)+(-0.005)*Math.cos(angle)
-                    ];
-                }else{
-                    angleVal=(angleVal-2)%360;
-                    angle=(angleVal/180.0)*Math.PI;
-                    camera_angle=[
-                        -0.005*Math.cos(angle)-(-0.005)*Math.sin(angle),
-                        -0.005*Math.sin(angle)+(-0.005)*Math.cos(angle)
-                    ];
-                }
-                if(pointer)pointer=e.point;
-            }
+            move(e);
+        });
+        map.on('touchmove', (e)=> {
+            move(e);
         });
     }
 
@@ -235,6 +219,36 @@ export default class MapPane extends Component {
         return <div className={'map'} ref={(e) => (this.container = e)} />;
     }
 }
+
+const move=(e)=>{
+    if(running&&pointer){
+        let x0=pointer.x;
+        let y0=pointer.y;
+        let x1=e.point.x;
+        let y1=e.point.y;
+        if(y1>y0){
+            cameraAltitude=Math.min(2000,cameraAltitude+20);
+        }else{
+            cameraAltitude=Math.max(200,cameraAltitude-20);
+        }
+        if(x1>x0){
+            angleVal=(angleVal+2)%360;
+            angle=(angleVal/180.0)*Math.PI;
+            camera_angle=[
+                -0.005*Math.cos(angle)-(-0.005)*Math.sin(angle),
+                -0.005*Math.sin(angle)+(-0.005)*Math.cos(angle)
+            ];
+        }else{
+            angleVal=(angleVal-2)%360;
+            angle=(angleVal/180.0)*Math.PI;
+            camera_angle=[
+                -0.005*Math.cos(angle)-(-0.005)*Math.sin(angle),
+                -0.005*Math.sin(angle)+(-0.005)*Math.cos(angle)
+            ];
+        }
+        if(pointer)pointer=e.point;
+    }
+};
 
 const updateGeojsonLayer=(mapobj)=>{
     if (!mapobj.getSource('trace')){
