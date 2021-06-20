@@ -22,6 +22,8 @@ let phase;
 let angle=0.0;
 let camera_angle=[-0.005,-0.005];
 let speedMul=1.0;
+let pointer;
+let angleVal=0;
 
 
 const dem={
@@ -83,20 +85,6 @@ export const setPhase=(val)=>{
     if(phase===0.0)start=null;
     if(targetRoute)requestAnimationFrame(frame);
 }
-
-export const changeHeight=(val)=>{
-    cameraAltitude=val;
-    if(!running)checkView();
-};
-
-export const changeAngle=(val)=>{
-    angle=(val/180.0)*Math.PI;
-    camera_angle=[
-        -0.005*Math.cos(angle)-(-0.005)*Math.sin(angle),
-        -0.005*Math.sin(angle)+(-0.005)*Math.cos(angle)
-    ];
-    if(!running)checkView();
-};
 
 export const startMovie=()=>{
     running=true;
@@ -198,32 +186,48 @@ export default class MapPane extends Component {
         map.addControl(new mapbox.NavigationControl());
 
         map.on('load', () => {
-/*
-            map.addLayer({
-                'id': 'vector-tile',
-                'type': 'line',
-                'minzoom': 8,
-                'maxzoom': 18,
-                'source': {
-                    'type':'vector',
-                    'tiles':[
-                        'https://cyberjapandata.gsi.go.jp/xyz/experimental_bvmap/{z}/{x}/{y}.pbf'
-                    ],
-                },
-                'source-layer': 'road',
-                    'layout': {
-                        'line-join': 'round',
-                        'line-cap': 'round',
-                    },
-                    'paint': {
-                        'line-color': '#ff69b4',
-                    'line-width': 3
-                }
-            });
-*/
             setTerrain(map);
             setSky(map);
             setGeojsonLayer(map);
+        });
+
+        map.on('mousedown', (e)=> {
+            pointer=e.point;
+        });
+        map.on('mouseup', (e)=> {
+            pointer=null;
+        });
+        map.on('mouseout', (e)=> {
+            pointer=null;
+        });
+        map.on('mousemove', (e)=> {
+            if(running&&pointer){
+                let x0=pointer.x;
+                let y0=pointer.y;
+                let x1=e.point.x;
+                let y1=e.point.y;
+                if(y1>y0){
+                    cameraAltitude=Math.min(2000,cameraAltitude+20);
+                }else{
+                    cameraAltitude=Math.max(200,cameraAltitude-20);
+                }
+                if(x1>x0){
+                    angleVal=(angleVal+2)%360;
+                    angle=(angleVal/180.0)*Math.PI;
+                    camera_angle=[
+                        -0.005*Math.cos(angle)-(-0.005)*Math.sin(angle),
+                        -0.005*Math.sin(angle)+(-0.005)*Math.cos(angle)
+                    ];
+                }else{
+                    angleVal=(angleVal-2)%360;
+                    angle=(angleVal/180.0)*Math.PI;
+                    camera_angle=[
+                        -0.005*Math.cos(angle)-(-0.005)*Math.sin(angle),
+                        -0.005*Math.sin(angle)+(-0.005)*Math.cos(angle)
+                    ];
+                }
+                if(pointer)pointer=e.point;
+            }
         });
     }
 
@@ -380,6 +384,7 @@ const setSky=(mapobj)=>{
     }
 };
 
+/*
 const checkView=()=>{
     if(!targetRoute)return;
     if(!phase)phase=0;
@@ -412,6 +417,7 @@ const checkView=()=>{
     };
     map.getSource('point').setData(point);
 };
+*/
 
 const frame=(time)=>{
     if (!start){

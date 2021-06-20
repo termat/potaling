@@ -25,7 +25,8 @@ import FullScreenDialog from './FullScreenDialog'
 import {handleDialogOpen} from './FullScreenDialog'
 import Tooltip from '@material-ui/core/Tooltip';
 import Grid from '@material-ui/core/Grid';
-import ControlPanerl from './ControlPanel';
+import RegistDialog from './RegistDialog'
+import {registDialogOpen} from './RegistDialog'
 
 let gpxParser = require('gpxparser');
 const drawerWidth = 300;
@@ -196,6 +197,11 @@ export default function Dashboard() {
               <NotificationsIcon />
             </IconButton>
             </Tooltip>
+            <Tooltip title="登録" placement="bottom">
+            <IconButton color="inherit" onClick={registDialogOpen}>
+              <NotificationsIcon />
+            </IconButton>
+            </Tooltip>
             <Divider orientation="vertical" flexItem />
             </Grid>
           </div>
@@ -227,11 +233,11 @@ export default function Dashboard() {
         <div className={classes.drawerHeader} />
         <Container maxWidth="xl" className={classes.container} onClick={handleDrawerClose} >
           <MapPane />
-          <ControlPanerl /> 
           <ControlBar /> 
         </Container>
       </main>
       <FullScreenDialog />
+      <RegistDialog />
     </div>
   );
 }
