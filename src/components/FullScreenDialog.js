@@ -12,7 +12,7 @@ import Slide from '@material-ui/core/Slide';
 import Link from '@material-ui/core/Link';
 import Box from '@material-ui/core/Box';
 import YotubeDialog from './SimpleDialog'
-import {setup} from './Dashboard'
+import {setup} from './Dashboard';
 
 function Copyright() {
   return (
@@ -72,8 +72,10 @@ export default function FullScreenDialog() {
             <Typography variant="h6" className={classes.title} onClick={handleClose}>
               ポタリングの記録
             </Typography>
-            <div style={{marginRight:"10px"}} ><Follow /></div>
-            <div style={{marginRight:"30px"}}><a href="https://twitter.com/share" className="twitter-share-button" style={{marginRight:"20px"}}>Tweet</a></div>
+            <Box sx={{ display: { xs: 'none', md: 'inline' } }}>
+              <div style={{marginRight:"10px",display:'inline'}} ><Follow /></div>
+              <div style={{marginRight:"30px",display:'inline'}}><a href="https://twitter.com/share" className="twitter-share-button" style={{marginRight:"20px"}}>Tweet</a></div>
+            </Box>
             <CloseIcon onClick={handleClose} />
             <Button color="inherit" onClick={handleClose}>
               Close

@@ -26,7 +26,7 @@ import {handleDialogOpen} from './FullScreenDialog'
 import Tooltip from '@material-ui/core/Tooltip';
 import Grid from '@material-ui/core/Grid';
 import RegistDialog from './RegistDialog'
-import {registDialogOpen} from './RegistDialog'
+import {registDialogOpen} from './RegistDialog';
 
 let gpxParser = require('gpxparser');
 const drawerWidth = 300;
@@ -170,7 +170,7 @@ export default function Dashboard() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
+          <Typography variant="h6" noWrap component="div" sx={{ display: { xs: 'none', md: 'block' } }}>
             ポタリングの記録
           </Typography>
           <div className={classes.toolbarButtons}>
