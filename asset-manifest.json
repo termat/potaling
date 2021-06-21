@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/potaling/static/css/main.7c498a6c.chunk.css",
-    "main.js": "/potaling/static/js/main.9bb77935.chunk.js",
-    "main.js.map": "/potaling/static/js/main.9bb77935.chunk.js.map",
+    "main.js": "/potaling/static/js/main.f0e7a5f9.chunk.js",
+    "main.js.map": "/potaling/static/js/main.f0e7a5f9.chunk.js.map",
     "runtime-main.js": "/potaling/static/js/runtime-main.5daa5aa3.js",
     "runtime-main.js.map": "/potaling/static/js/runtime-main.5daa5aa3.js.map",
     "static/css/2.81b445b2.chunk.css": "/potaling/static/css/2.81b445b2.chunk.css",
@@ -22,6 +22,6 @@
     "static/css/2.81b445b2.chunk.css",
     "static/js/2.64c0dc14.chunk.js",
     "static/css/main.7c498a6c.chunk.css",
-    "static/js/main.9bb77935.chunk.js"
+    "static/js/main.f0e7a5f9.chunk.js"
   ]
 }
