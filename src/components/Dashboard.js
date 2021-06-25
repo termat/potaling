@@ -29,6 +29,8 @@ import RegistDialog from './RegistDialog'
 import {registDialogOpen} from './RegistDialog';
 
 let gpxParser = require('gpxparser');
+let tcxParse = require('tcx');
+var DOMParser = require('xmldom').DOMParser;
 const drawerWidth = 300;
 
 const useStyles = makeStyles((theme) => ({
@@ -120,6 +122,10 @@ const fileProc=(obj)=>{
     let gpx=new gpxParser();
     gpx.parse(obj);
     parseGeojson(JSON.stringify(gpx.toGeoJSON()));
+  }else if(fname.endsWith(".tcx")){
+    var doc = new DOMParser().parseFromString(obj);
+    let tcx=tcxParse(doc);
+    parseGeojson(JSON.stringify(tcx));
   }
 };
 
