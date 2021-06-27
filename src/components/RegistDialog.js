@@ -42,19 +42,18 @@ const useStyles = makeStyles((theme) => ({
       },
     toolbar: {
         height:"60px",
-        marginTop:"-20px",
         color: "#fff",
-        backgroundColor: "#3f51b5"
+        backgroundColor: "#3f51b5",
       },
     title: {
       marginLeft: theme.spacing(1),
       flex: 1,
     },
     box: {
-        width:"380px",
         margin:" 0 auto"
       },
     textField:{
+        width:"100%",
         fontSize:"16px",
         fontfamily:"sans-serif",
     },
@@ -173,8 +172,7 @@ const useStyles = makeStyles((theme) => ({
     return (
       <div>
         <Dialog className={classes.dialog} open={open} onClose={handleClose} TransitionComponent={Transition}>
-        <DialogTitle id="simple-dialog-title" className={classes.toolbar}>
-        <Toolbar className={classes.toolbar}>
+          <Toolbar className={classes.toolbar}>
               <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
                 <DirectionsBikeIcon />
               </IconButton>
@@ -182,10 +180,9 @@ const useStyles = makeStyles((theme) => ({
                 データ登録
               </Typography>
               <CloseIcon onClick={handleClose} />
-        </Toolbar>
-        </DialogTitle>
+          </Toolbar>
             <Box className={classes.box}>
-                <table align="center">
+                <table align="center" width="100%">
                     <tbody className={classes.textField}>
                     <tr>
                         <td>タイトル</td>
