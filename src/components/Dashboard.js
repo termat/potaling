@@ -94,7 +94,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
 let fname;
 
 const fileRead=()=>{
@@ -182,12 +181,12 @@ export default function Dashboard() {
           <div className={classes.toolbarButtons}>
           <Grid container alignItems="center" className={classes.root}>
           <Divider orientation="vertical" flexItem />
-          <Tooltip title="Geojson読込" placement="bottom">
+          <Tooltip title="ログ読込" placement="bottom">
             <IconButton color="inherit" onClick={fileRead}>
               <FolderOpenIcon />
             </IconButton>
             </Tooltip>
-            <input type="file" id="file" style={{ display: 'none'}}></input>
+            <input type="file" accept=".geojson,.json,.gpx,.tcx" id="file" style={{ display: 'none'}}></input>
             <Tooltip title="地図切替" placement="bottom">
             <IconButton color="inherit" onClick={changeMap}>
               <MapIcon />
