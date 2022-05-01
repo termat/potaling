@@ -380,7 +380,7 @@ const setTerrain=(mapobj)=>{
         mapobj.setTerrain({ 'source': 'mapbox-dem', 'exaggeration': 1.5 });
         */
         mapobj.addSource('mapbox-dem', dem);
-        mapobj.setTerrain({ 'source': 'mapbox-dem', 'exaggeration': 1.5 });
+        mapobj.setTerrain({ 'source': 'mapbox-dem', 'exaggeration': 1.0 });
     }
 };
 
