@@ -37,6 +37,22 @@ const dem={
     "attribution": "<a href='https://maps.gsi.go.jp/development/ichiran.html'>地理院タイル</a>"
   };
 
+ const mvt={
+    "type": "vector",
+    "tiles": ["/potaling/mvt/{z}/{x}/{y}.pbf"],
+    "minzoom":12,
+    "maxzoom": 18,
+    "attribution": "<a href='https://www.mlit.go.jp/plateau/'>PLATEAU</a>"
+  };
+
+  const vector={
+    "type": "vector",
+    "tiles": [
+        "https://cyberjapandata.gsi.go.jp/xyz/experimental_bvmap/{z}/{x}/{y}.pbf"
+    ],
+    "minzoom":9,
+    "maxzoom": 16
+  };
 
 export const setSpeed=(val)=>{
     speedMul=val;
@@ -188,7 +204,9 @@ export default class MapPane extends Component {
         map.on('load', () => {
             setTerrain(map);
             setSky(map);
+            setMvt(map);
             setGeojsonLayer(map);
+            setVector(map);
         });
 
         map.on('touchstart', (e)=> {
@@ -370,17 +388,56 @@ const setGeojsonLayer=(mapobj)=>{
 
 const setTerrain=(mapobj)=>{
     if (!mapobj.getSource('mapbox-dem')){
-        /*
-        mapobj.addSource('mapbox-dem', {
-            'type': 'raster-dem',
-            'url': 'mapbox://mapbox.mapbox-terrain-dem-v1',
-            'tileSize': 512,
-            'maxzoom': 14
-        });
-        mapobj.setTerrain({ 'source': 'mapbox-dem', 'exaggeration': 1.5 });
-        */
         mapobj.addSource('mapbox-dem', dem);
         mapobj.setTerrain({ 'source': 'mapbox-dem', 'exaggeration': 1.0 });
+    }
+};
+
+const setMvt=(mapobj)=>{
+    if (!mapobj.getSource('mvt')){
+        mapobj.addSource('mvt', mvt);
+		mapobj.addLayer({
+			"id": "bldg",
+			"type": "fill-extrusion",
+			"source": "mvt",
+			"source-layer": "BUILDING",
+			"minzoom": 12,
+			"maxzoom": 18,
+			"paint": {
+				"fill-extrusion-color": [
+					'interpolate',
+					['linear'],
+					["get", "height"],
+						0,'blue',
+						10,'royalblue',
+						20,'cyan',
+						30,'lime',
+						40,'yellow',
+						50,'orange',
+						60,'red'],
+				"fill-extrusion-height": ["get", "height"],
+				'fill-extrusion-opacity': 0.75,
+			}
+		});
+    }
+};
+
+const setVector=(mapobj)=>{
+    if (!mapobj.getSource('vector')){
+        mapobj.addSource('vector', vector);
+        mapobj.addLayer({
+            "id": "vector",
+            "type": "line",
+            "source": "vector",
+            "source-layer": "road",
+            "minzoom": 9,
+            "maxzoom": 18,
+            "paint": {
+                    'line-opacity': 1.0,
+                    'line-color': 'rgb(80, 80, 80)',
+                    'line-width': 2
+                }
+        });
     }
 };
 
