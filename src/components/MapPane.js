@@ -40,8 +40,8 @@ const dem={
  const mvt={
     "type": "vector",
     "tiles": ["/potaling/mvt/{z}/{x}/{y}.pbf"],
-    "minzoom":12,
-    "maxzoom": 18,
+    "minzoom":10,
+    "maxzoom": 17,
     "attribution": "<a href='https://www.mlit.go.jp/plateau/'>PLATEAU</a>"
   };
 
@@ -401,8 +401,8 @@ const setMvt=(mapobj)=>{
 			"type": "fill-extrusion",
 			"source": "mvt",
 			"source-layer": "BUILDING",
-			"minzoom": 12,
-			"maxzoom": 18,
+			"minzoom": 10,
+			"maxzoom": 17,
 			"paint": {
 				"fill-extrusion-color": [
 					'interpolate',
