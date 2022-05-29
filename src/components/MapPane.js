@@ -204,7 +204,7 @@ export default class MapPane extends Component {
         map.on('load', () => {
             setTerrain(map);
             setSky(map);
-            setMvt(map);
+//            setMvt(map);
             setGeojsonLayer(map);
             setVector(map);
         });
