@@ -134,7 +134,7 @@ let MAPS=[MapPane.PHT,MapPane.STD];
 
 const changeMap=()=>{
   current_map=(current_map+1)%MAPS.length;
-  changeStyle(MAPS[current_map]);
+  changeStyle(MAPS[current_map],current_map);
 }
 
 export let setup;
@@ -202,11 +202,13 @@ export default function Dashboard() {
               <NotificationsIcon />
             </IconButton>
             </Tooltip>
-            <Tooltip title="登録" placement="bottom">
+{/*
+            <Tooltip title="登録" placement="bottom">  
             <IconButton color="inherit" onClick={registDialogOpen}>
               <NotificationsIcon />
             </IconButton>
             </Tooltip>
+*/}
             <Divider orientation="vertical" flexItem />
             </Grid>
           </div>
