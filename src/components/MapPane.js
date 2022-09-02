@@ -5,10 +5,10 @@ import './MapPane.css';
 import {Deck} from '@deck.gl/core';
 import * as turf from '@turf/turf'
 import {setSlider,endRunning} from './ControlBar';
-
 import mapbox from 'mapbox-gl/dist/mapbox-gl-csp';
 // eslint-disable-next-line import/no-webpack-loader-syntax
 import MapboxWorker from 'worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker';
+import { curveLinearClosed } from 'd3';
 mapbox.workerClass = MapboxWorker;
 
 let targetRoute;
@@ -24,6 +24,7 @@ let camera_angle=[-0.005,-0.005];
 let speedMul=1.0;
 let pointer;
 let angleVal=0;
+let runAni;
 
 
 const dem={
@@ -39,14 +40,16 @@ const dem={
 
  const mvt={
     "type": "vector",
+    "glyphs": "https://maps.gsi.go.jp/xyz/noto-jp/{fontstack}/{range}.pbf",
     "tiles": ["/potaling/mvt/{z}/{x}/{y}.pbf"],
     "minzoom":12,
     "maxzoom": 17,
-    "attribution": "<a href='https://www.mlit.go.jp/plateau/'>PLATEAU</a>"
+    "attribution": "<a href='https://github.com/gsi-cyberjapan/gsimaps-vector-experiment'>地理院ベクトルタイル</a>"
   };
 
   const vector={
     "type": "vector",
+    "glyphs": "https://maps.gsi.go.jp/xyz/noto-jp/{fontstack}/{range}.pbf",
     "tiles": [
         "https://cyberjapandata.gsi.go.jp/xyz/experimental_bvmap/{z}/{x}/{y}.pbf"
     ],
@@ -99,16 +102,17 @@ export const parseGeojson=(str)=>{
 export const setPhase=(val)=>{
     phase=val;
     if(phase===0.0)start=null;
-    if(targetRoute)requestAnimationFrame(frame);
+    if(targetRoute)frame();
 }
 
 export const startMovie=()=>{
     running=true;
-    if(targetRoute)requestAnimationFrame(frame);
+    if(targetRoute)frame();
 };
 
 export const stopMovie=()=>{
     running=false;
+    cancelAnimationFrame(runAni);
 };
 
 export const fitBounds=()=>{
@@ -129,7 +133,7 @@ export const fitBounds=()=>{
     ]);
 };
 
-export const changeStyle=(style)=>{
+export const changeStyle=(style,flg)=>{
     if(style.terrain){
         delete style.terrain
     }    
@@ -138,6 +142,7 @@ export const changeStyle=(style)=>{
         setTerrain(map);
         setSky(map);
         if(targetRoute)updateGeojsonLayer(map);
+        if(flg==0)setVector(map);
     });
 };
 
@@ -156,6 +161,7 @@ export default class MapPane extends Component {
     static STD='/potaling/std.json';
     static PHT= {
             "version": 8,
+            "glyphs": "https://maps.gsi.go.jp/xyz/noto-jp/{fontstack}/{range}.pbf",
             "sources": {
                 "t_pale": {
                     "type": "raster",
@@ -244,25 +250,28 @@ const move=(e)=>{
         let y0=pointer.y;
         let x1=e.point.x;
         let y1=e.point.y;
-        if(y1>y0){
-            cameraAltitude=Math.min(2000,cameraAltitude+20);
+        if(Math.abs(y1-y0)>10){
+            if(y1>y0){
+                cameraAltitude=Math.min(2000,cameraAltitude+50);
+            }else{
+                cameraAltitude=Math.max(200,cameraAltitude-50);
+            }
         }else{
-            cameraAltitude=Math.max(200,cameraAltitude-20);
-        }
-        if(x1>x0){
-            angleVal=(angleVal+2)%360;
-            angle=(angleVal/180.0)*Math.PI;
-            camera_angle=[
-                -0.005*Math.cos(angle)-(-0.005)*Math.sin(angle),
-                -0.005*Math.sin(angle)+(-0.005)*Math.cos(angle)
-            ];
-        }else{
-            angleVal=(angleVal-2)%360;
-            angle=(angleVal/180.0)*Math.PI;
-            camera_angle=[
-                -0.005*Math.cos(angle)-(-0.005)*Math.sin(angle),
-                -0.005*Math.sin(angle)+(-0.005)*Math.cos(angle)
-            ];
+            if(x1>x0){
+                angleVal=(angleVal+5)%360;
+                angle=(angleVal/180.0)*Math.PI;
+                camera_angle=[
+                    -0.005*Math.cos(angle)-(-0.005)*Math.sin(angle),
+                    -0.005*Math.sin(angle)+(-0.005)*Math.cos(angle)
+                ];
+            }else{
+                angleVal=(angleVal-5)%360;
+                angle=(angleVal/180.0)*Math.PI;
+                camera_angle=[
+                    -0.005*Math.cos(angle)-(-0.005)*Math.sin(angle),
+                    -0.005*Math.sin(angle)+(-0.005)*Math.cos(angle)
+                ];
+            }
         }
         if(pointer)pointer=e.point;
     }
@@ -389,7 +398,7 @@ const setGeojsonLayer=(mapobj)=>{
 const setTerrain=(mapobj)=>{
     if (!mapobj.getSource('mapbox-dem')){
         mapobj.addSource('mapbox-dem', dem);
-        mapobj.setTerrain({ 'source': 'mapbox-dem', 'exaggeration': 1.0 });
+        mapobj.setTerrain({ 'source': 'mapbox-dem', 'exaggeration': 1.25 });
     }
 };
 
@@ -437,6 +446,35 @@ const setVector=(mapobj)=>{
                     'line-color': 'rgb(80, 80, 80)',
                     'line-width': 2
                 }
+        });
+        mapobj.addLayer({
+            "id": "label",
+            "type": "symbol",
+            "source": "vector",
+            "source-layer": "label",
+            "minzoom": 9,
+            "maxzoom": 18,
+            "layout": {
+                'text-size': 16,
+                "text-rotate":["case",["==",["get","arrng"],2],["*",["+",["to-number",["get","arrngAgl"]],90],-1],["*",["to-number",["get","arrngAgl"]],-1]],
+                "text-field":["get","knj"],
+                "text-font":["NotoSansCJKjp-Regular"],
+                "text-allow-overlap": true,
+                "text-keep-upright":true,
+                "text-allow-overlap":false,
+                "symbol-z-order":"auto",
+                "text-max-width":60,
+                'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
+                'text-justify': 'auto',
+                "symbol-placement": "point"
+            },
+            "paint": {
+                "text-color": "black",
+                "text-opacity": 1.0,
+                "text-halo-color": "rgba(255,255,255,0.95)",
+                "text-halo-width": 1.5,
+                "text-halo-blur": 1
+            }
         });
     }
 };
@@ -489,15 +527,46 @@ const checkView=()=>{
     map.getSource('point').setData(point);
 };
 */
+/*
+class TestControl01 {
+    onAdd(map) {
+        this.map = map;
+        const bt1 = document.createElement('button');
+        bt1.innerHTML = '<button class="mapboxgl-ctrl-zoom-in" type="button" title="Zoom in" aria-label="Zoom in" aria-disabled="false"><span class="mapboxgl-ctrl-icon" aria-hidden="true"></span></button>';
+        bt1.addEventListener('click', (e) => {
+           cameraAltitude=Math.min(2000,cameraAltitude+100);
+        });
+        const bt2 = document.createElement('button');
+        bt2.innerHTML = '<button class="mapboxgl-ctrl-zoom-in" type="button" title="Zoom in" aria-label="Zoom in" aria-disabled="false"><span class="mapboxgl-ctrl-icon" aria-hidden="true"></span></button>';
+        bt2.addEventListener('click', (e) => {
+            cameraAltitude=Math.max(200,cameraAltitude-100);
+        });
+        this.container = document.createElement('div');
+        this.container.className = 'mapboxgl-ctrl mapboxgl-ctrl-group';
+        this.container.appendChild(bt1);
+        this.container.appendChild(bt2);
+        return this.container;
+    }
+  
+    onRemove() {
+        this.container.parentNode.removeChild(this.container);
+        this.map = undefined;
+    }
+}
+*/
 
 const frame=(time)=>{
     if (!start){
         start = time;
         phase=0.0;
     }else{
-        let dd=time-start;
-        start=time;
-        phase=phase+speed*dd*speedMul;
+        if (typeof time !== "undefined") {
+            let dd=time-start;
+            start=time;
+            phase=phase+speed*dd*speedMul*0.5;
+        }else{
+            start=new Date().noew();
+        }
     }
     setSlider(phase);
     if (phase >= 1) {
@@ -512,8 +581,8 @@ const frame=(time)=>{
     ).geometry.coordinates;
     let camera = map.getFreeCameraOptions();
     camera.position = mapbox.MercatorCoordinate.fromLngLat({
-        lng: alongRoute[0]-camera_angle[0],
-        lat: alongRoute[1]-camera_angle[1]
+            lng: alongRoute[0]-camera_angle[0],
+            lat: alongRoute[1]-camera_angle[1]
         },
         cameraAltitude
     ); 
@@ -535,5 +604,9 @@ const frame=(time)=>{
     };
     let src=map.getSource('point');
     if(src)src.setData(point);
-    if(running)requestAnimationFrame(frame);
+    if(running){
+        runAni=requestAnimationFrame(frame);
+    }else{
+        cancelAnimationFrame(runAni);
+    }
 };
