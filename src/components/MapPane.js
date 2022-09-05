@@ -260,28 +260,20 @@ const move=(e)=>{
         let y0=pointer.y;
         let x1=e.point.x;
         let y1=e.point.y;
-        if(e.targetTouches.length>1){
-            if(x1>x0){
-                cameraAltitude=Math.min(2000,cameraAltitude+50);
-            }else{
-                cameraAltitude=Math.max(200,cameraAltitude-50);
-            }
+        if(x1>x0){
+            angleVal=(angleVal+5)%360;
+            angle=(angleVal/180.0)*Math.PI;
+            camera_angle=[
+                -0.005*Math.cos(angle)-(-0.005)*Math.sin(angle),
+                -0.005*Math.sin(angle)+(-0.005)*Math.cos(angle)
+            ];
         }else{
-            if(x1>x0){
-                angleVal=(angleVal+5)%360;
-                angle=(angleVal/180.0)*Math.PI;
-                camera_angle=[
-                    -0.005*Math.cos(angle)-(-0.005)*Math.sin(angle),
-                    -0.005*Math.sin(angle)+(-0.005)*Math.cos(angle)
-                ];
-            }else{
-                angleVal=(angleVal-5)%360;
-                angle=(angleVal/180.0)*Math.PI;
-                camera_angle=[
-                    -0.005*Math.cos(angle)-(-0.005)*Math.sin(angle),
-                    -0.005*Math.sin(angle)+(-0.005)*Math.cos(angle)
-                ];
-            }
+            angleVal=(angleVal-5)%360;
+            angle=(angleVal/180.0)*Math.PI;
+            camera_angle=[
+                -0.005*Math.cos(angle)-(-0.005)*Math.sin(angle),
+                -0.005*Math.sin(angle)+(-0.005)*Math.cos(angle)
+            ];
         }
         if(pointer)pointer=e.point;
     }
