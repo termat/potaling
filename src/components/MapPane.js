@@ -8,7 +8,6 @@ import {setSlider,endRunning} from './ControlBar';
 import mapbox from 'mapbox-gl/dist/mapbox-gl-csp';
 // eslint-disable-next-line import/no-webpack-loader-syntax
 import MapboxWorker from 'worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker';
-import { curveLinearClosed } from 'd3';
 mapbox.workerClass = MapboxWorker;
 
 let targetRoute;
@@ -107,7 +106,7 @@ export const setPhase=(val)=>{
 
 export const startMovie=()=>{
     running=true;
-    if(targetRoute)frame();
+    if(targetRoute)requestAnimationFrame(frame);
 };
 
 export const stopMovie=()=>{
@@ -142,7 +141,7 @@ export const changeStyle=(style,flg)=>{
         setTerrain(map);
         setSky(map);
         if(targetRoute)updateGeojsonLayer(map);
-        if(flg==0)setVector(map);
+        if(flg===0)setVector(map);
     });
 };
 
@@ -237,6 +236,16 @@ export default class MapPane extends Component {
         map.on('touchmove', (e)=> {
             move(e);
         });
+        map.on('wheel',(e)=>{
+            if(running){
+                e.preventDefault();
+                if(e.originalEvent.deltaY>0){
+                    cameraAltitude=Math.min(2000,cameraAltitude+50);
+                }else{
+                    cameraAltitude=Math.max(200,cameraAltitude-50);
+                }
+            }
+        });
     }
 
     render() {
@@ -250,8 +259,8 @@ const move=(e)=>{
         let y0=pointer.y;
         let x1=e.point.x;
         let y1=e.point.y;
-        if(Math.abs(y1-y0)>10){
-            if(y1>y0){
+        if(e.touches.length>1){
+            if(x1>x0){
                 cameraAltitude=Math.min(2000,cameraAltitude+50);
             }else{
                 cameraAltitude=Math.max(200,cameraAltitude-50);
@@ -555,17 +564,19 @@ class TestControl01 {
 }
 */
 
+let dd=20;
+
 const frame=(time)=>{
     if (!start){
         start = time;
         phase=0.0;
     }else{
         if (typeof time !== "undefined") {
-            let dd=time-start;
+//            let dd=time-start;
             start=time;
             phase=phase+speed*dd*speedMul*0.5;
         }else{
-            start=new Date().noew();
+            start=Date.now();
         }
     }
     setSlider(phase);
