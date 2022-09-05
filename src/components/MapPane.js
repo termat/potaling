@@ -255,11 +255,12 @@ export default class MapPane extends Component {
 
 const move=(e)=>{
     if(running&&pointer){
+        e.preventDefault();
         let x0=pointer.x;
         let y0=pointer.y;
         let x1=e.point.x;
         let y1=e.point.y;
-        if(e.touches.length>1){
+        if(e.targetTouches.length>1){
             if(x1>x0){
                 cameraAltitude=Math.min(2000,cameraAltitude+50);
             }else{
