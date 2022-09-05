@@ -112,6 +112,7 @@ export const startMovie=()=>{
 export const stopMovie=()=>{
     running=false;
     cancelAnimationFrame(runAni);
+    start=null;
 };
 
 export const fitBounds=()=>{
@@ -239,6 +240,7 @@ export default class MapPane extends Component {
         map.on('wheel',(e)=>{
             if(running){
                 e.preventDefault();
+                console.log(e.originalEvent.deltaY>0);
                 if(e.originalEvent.deltaY>0){
                     cameraAltitude=Math.min(2000,cameraAltitude+50);
                 }else{
@@ -260,20 +262,35 @@ const move=(e)=>{
         let y0=pointer.y;
         let x1=e.point.x;
         let y1=e.point.y;
-        if(x1>x0){
-            angleVal=(angleVal+5)%360;
-            angle=(angleVal/180.0)*Math.PI;
-            camera_angle=[
-                -0.005*Math.cos(angle)-(-0.005)*Math.sin(angle),
-                -0.005*Math.sin(angle)+(-0.005)*Math.cos(angle)
-            ];
+        const e2 = e.originalEvent;
+        let flg=false;
+        if (e2 && 'touches' in e2) {
+            if (e2.touches.length > 1) {
+                flg=true;
+            }
+        }
+        if (flg) {
+            if(y1>y0){
+                cameraAltitude=Math.min(2000,cameraAltitude+50);
+            }else{
+                cameraAltitude=Math.max(200,cameraAltitude-50);
+            }
         }else{
-            angleVal=(angleVal-5)%360;
-            angle=(angleVal/180.0)*Math.PI;
-            camera_angle=[
-                -0.005*Math.cos(angle)-(-0.005)*Math.sin(angle),
-                -0.005*Math.sin(angle)+(-0.005)*Math.cos(angle)
-            ];
+            if(x1>x0){
+                angleVal=(angleVal+5)%360;
+                angle=(angleVal/180.0)*Math.PI;
+                camera_angle=[
+                    -0.005*Math.cos(angle)-(-0.005)*Math.sin(angle),
+                    -0.005*Math.sin(angle)+(-0.005)*Math.cos(angle)
+                ];
+            }else{
+                angleVal=(angleVal-5)%360;
+                angle=(angleVal/180.0)*Math.PI;
+                camera_angle=[
+                    -0.005*Math.cos(angle)-(-0.005)*Math.sin(angle),
+                    -0.005*Math.sin(angle)+(-0.005)*Math.cos(angle)
+                ];
+            }
         }
         if(pointer)pointer=e.point;
     }
@@ -557,15 +574,13 @@ class TestControl01 {
 }
 */
 
-let dd=20;
-
 const frame=(time)=>{
     if (!start){
         start = time;
-        phase=0.0;
+//        phase=0.0;
     }else{
         if (typeof time !== "undefined") {
-//            let dd=time-start;
+            let dd=time-start;
             start=time;
             phase=phase+speed*dd*speedMul*0.5;
         }else{
