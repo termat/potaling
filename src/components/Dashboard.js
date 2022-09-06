@@ -14,6 +14,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import MainListItems from './listItems';
+import jumpData from './listItems';
 import MapPane from './MapPane';
 import ControlBar from './ControlBar';
 import NotificationsIcon from '@material-ui/icons/Notifications';
@@ -139,7 +140,7 @@ const changeMap=()=>{
 
 export let setup;
 
-export default function Dashboard() {
+export default function Dashboard(props) {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -153,8 +154,10 @@ export default function Dashboard() {
   };
 
   setup=()=>{
-    handleDrawerOpen();
-    setTimeout(handleDrawerClose,1000);
+    if(props.window){
+      handleDrawerOpen();
+      setTimeout(handleDrawerClose,1000);
+    }
   };
 
   return (
@@ -229,7 +232,7 @@ export default function Dashboard() {
           </IconButton>
         </div>
         <Divider />
-        <List><MainListItems /></List>
+        <List><MainListItems page={props.page} /></List>
         <Divider />
       </Drawer>
       <main
@@ -243,7 +246,7 @@ export default function Dashboard() {
           <ControlBar /> 
         </Container>
       </main>
-      <FullScreenDialog />
+      <FullScreenDialog open={props.window}/>
       <RegistDialog />
     </div>
   );

@@ -46,38 +46,39 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 export let handleDialogOpen;
+export let handleDialogClose;
 
-export default function FullScreenDialog() {
+export default function FullScreenDialog(props) {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(props.open);
 
   handleDialogOpen = () => {
     isLoadwidgets=false;
     setOpen(true);
   };
 
-  const handleClose = () => {
+  handleDialogClose = () => {
     setOpen(false);
     setup();
   };
 
   return (
     <div>
-      <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
+      <Dialog fullScreen open={open} onClose={handleDialogClose} TransitionComponent={Transition}>
         <AppBar className={classes.appBar}>
           <Toolbar>
-            <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
+            <IconButton edge="start" color="inherit" onClick={handleDialogClose} aria-label="close">
               <DirectionsBikeIcon />
             </IconButton>
-            <Typography variant="h6" className={classes.title} onClick={handleClose}>
+            <Typography variant="h6" className={classes.title} onClick={handleDialogClose}>
               ポタリングの記録
             </Typography>
             <Box sx={{ display: { xs: 'none', md: 'inline' } }}>
               <div style={{marginRight:"10px",display:'inline'}} ><Follow /></div>
               <div style={{marginRight:"30px",display:'inline'}}><a href="https://twitter.com/share" className="twitter-share-button" style={{marginRight:"20px"}}>Tweet</a></div>
             </Box>
-            <CloseIcon onClick={handleClose} />
-            <Button color="inherit" onClick={handleClose}>
+            <CloseIcon onClick={handleDialogClose} />
+            <Button color="inherit" onClick={handleDialogClose}>
               Close
             </Button>
           </Toolbar>
@@ -89,7 +90,7 @@ export default function FullScreenDialog() {
           <p style={{fontSize: "20px"}}>ポタリング（自転車散歩）した地域を俯瞰してみたいと思い作成したWebアプリです。<br />
             データ（geojson/gpx）を読み込むと、3D地図上で経路の俯瞰画像が表示されます。<br />
             実際に走った経路を俯瞰してみると小さな発見があって結構面白いです。</p>
-          <Button variant="contained" style={{margin:"10px"}} size="large" onClick={handleClose}>　開　始　</Button>
+          <Button variant="contained" style={{margin:"10px"}} size="large" onClick={handleDialogClose}>　開　始　</Button>
           <YotubeDialog />
           </Box>
         </div>

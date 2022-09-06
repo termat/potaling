@@ -13,7 +13,7 @@ const itemData = [];
 
 const fileRead=(data)=>{
 //  let url="https://termat.github.io/potaling/geojson/"+data.target.alt;
-  let url="/potaling/geojson/"+data.target.alt;
+  let url="/potaling/geojson/"+getItem(data.target.alt);
   axios.get(url)
   .then(res => {
     const val = res.data;
@@ -22,11 +22,42 @@ const fileRead=(data)=>{
   });
 };
 
+const getItem=(id)=>{
+  for(let i=0;i<itemData.length;i++){
+    if(id==itemData[i].no)return itemData[i].json;
+  }
+  return ""
+}
+
+export function startData(page){
+  for(let i=0;i<itemData.length;i++){
+    if(itemData[i].no==page){
+      let url="/potaling/geojson/"+getItem(page);
+      axios.get(url)
+      .then(res => {
+        const val = res.data;
+        let str=JSON.stringify(val);
+        parseGeojson(str)
+      });
+    }
+  }
+}
+
 export default class MainListItems extends Component{
+
+  constructor(props) {
+    super(props);
+  }
+
   componentDidMount() {
+    let pageNo=this.props.page;
     let url="/potaling/pota_data.csv";
     d3.csv(url, function(data) {
       itemData.push(data);
+    }).then(function(data) {
+      if(pageNo){
+        setTimeout(function(){startData(pageNo);},2500);
+      }
     });
   }
 
@@ -41,7 +72,7 @@ export default class MainListItems extends Component{
           <ImageListItem key={item.img}>
             <img
               srcSet={`${process.env.PUBLIC_URL}/images/${item.img}`}
-              alt={item.json}
+              alt={item.no}
               loading="lazy"
               onClick={fileRead}
             />
