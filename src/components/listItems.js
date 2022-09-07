@@ -8,12 +8,14 @@ import InfoIcon from '@material-ui/icons/Info';
 import {parseGeojson} from './MapPane'
 import axios from 'axios';
 import * as d3 from 'd3';
+import {useLocation} from 'react-router-dom';
 
 const itemData = [];
 
 const fileRead=(data)=>{
 //  let url="https://termat.github.io/potaling/geojson/"+data.target.alt;
   let url="/potaling/geojson/"+getItem(data.target.alt);
+  window.location.search="page="+data.target.alt;
   axios.get(url)
   .then(res => {
     const val = res.data;
@@ -24,7 +26,9 @@ const fileRead=(data)=>{
 
 const getItem=(id)=>{
   for(let i=0;i<itemData.length;i++){
-    if(id==itemData[i].no)return itemData[i].json;
+    if(id==itemData[i].no){
+      return itemData[i].json;
+    }
   }
   return ""
 }
