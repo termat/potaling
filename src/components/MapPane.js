@@ -5,6 +5,7 @@ import './MapPane.css';
 import {Deck} from '@deck.gl/core';
 import * as turf from '@turf/turf'
 import {setSlider,endRunning} from './ControlBar';
+import {startPage} from './listItems';
 import mapbox from 'mapbox-gl/dist/mapbox-gl-csp';
 // eslint-disable-next-line import/no-webpack-loader-syntax
 import MapboxWorker from 'worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker';
@@ -213,6 +214,10 @@ export default class MapPane extends Component {
 //            setMvt(map);
             setGeojsonLayer(map);
             setVector(map);
+            const arg=getArg(window.location.search);
+            if(arg["p"]){
+                startPage(arg["p"]);
+            }
         });
 
         map.on('touchstart', (e)=> {
@@ -511,6 +516,16 @@ const setSky=(mapobj)=>{
         });
     }
 };
+
+const getArg=(search)=>{
+    var arg = new Object;
+    var pair=search.substring(1).split('&');
+    for(var i=0;pair[i];i++) {
+        var kv = pair[i].split('=');
+        arg[kv[0]]=kv[1];
+    }
+    return arg;
+  }
 
 /*
 const checkView=()=>{

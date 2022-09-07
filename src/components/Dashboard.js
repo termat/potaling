@@ -232,7 +232,7 @@ export default function Dashboard(props) {
           </IconButton>
         </div>
         <Divider />
-        <List><MainListItems page={props.page} /></List>
+        <List><MainListItems /></List>
         <Divider />
       </Drawer>
       <main

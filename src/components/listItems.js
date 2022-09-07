@@ -8,20 +8,22 @@ import InfoIcon from '@material-ui/icons/Info';
 import {parseGeojson} from './MapPane'
 import axios from 'axios';
 import * as d3 from 'd3';
-import {useLocation} from 'react-router-dom';
 
 const itemData = [];
 
 const fileRead=(data)=>{
-//  let url="https://termat.github.io/potaling/geojson/"+data.target.alt;
-  let url="/potaling/geojson/"+getItem(data.target.alt);
-  window.location.search="page="+data.target.alt;
+//  let url="/potaling/geojson/"+getItem(data.target.alt);
+  const params = new URLSearchParams(window.location.search);
+  params.set('p', data.target.alt); 
+  window.location.search = params.toString();
+/*
   axios.get(url)
   .then(res => {
     const val = res.data;
     let str=JSON.stringify(val);
     parseGeojson(str)
   });
+  */
 };
 
 const getItem=(id)=>{
@@ -33,7 +35,7 @@ const getItem=(id)=>{
   return ""
 }
 
-export function startData(page){
+export function startPage(page){
   for(let i=0;i<itemData.length;i++){
     if(itemData[i].no==page){
       let url="/potaling/geojson/"+getItem(page);
@@ -54,15 +56,10 @@ export default class MainListItems extends Component{
   }
 
   componentDidMount() {
-    let pageNo=this.props.page;
     let url="/potaling/pota_data.csv";
     d3.csv(url, function(data) {
       itemData.push(data);
-    }).then(function(data) {
-      if(pageNo){
-        setTimeout(function(){startData(pageNo);},2500);
-      }
-    });
+    })
   }
 
   render() {

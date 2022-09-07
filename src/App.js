@@ -16,9 +16,9 @@ const App=()=> {
 export const Child = () => {
   const location = useLocation();
   const arg=getArg(location.search);
-  if(arg["page"]){
+  if(arg["p"]){
     return (
-      <Dashboard page={arg["page"]} window={false} />
+      <Dashboard window={false} />
     )
   }else{
     return (
