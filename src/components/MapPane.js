@@ -97,6 +97,7 @@ export const parseGeojson=(str)=>{
     fitBounds();
     start=null;
     phase=0.0;
+    setSlider(0);
 };
 
 export const setPhase=(val)=>{
