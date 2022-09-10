@@ -30,7 +30,6 @@ let runAni;
 const dem={
     "type": "raster-dem",
     "tiles": [
-//      "https://cyberjapandata.gsi.go.jp/xyz/dem_png/{z}/{x}/{y}.png"
       "https://www.termat.net/dem/{z}/{x}/{y}"
     ],
     "tileSize": 256,

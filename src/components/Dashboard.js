@@ -189,7 +189,7 @@ export default function Dashboard(props) {
               <FolderOpenIcon />
             </IconButton>
             </Tooltip>
-            <input type="file" accept=".geojson,.json,.gpx,.tcx" id="file" style={{ display: 'none'}}></input>
+            <input type="file" accept=".geojson,.gpx,.tcx" id="file" style={{ display: 'none'}}></input>
             <Tooltip title="地図切替" placement="bottom">
             <IconButton color="inherit" onClick={changeMap}>
               <MapIcon />
