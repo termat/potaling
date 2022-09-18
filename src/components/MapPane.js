@@ -574,7 +574,7 @@ const addPhoto=(map,xmin,xmax,ymin,ymax)=>{
             }
         });
 
-        map.on('click', 'photoId', function(e) {
+        map.on('mouseenter', 'photoId', function(e) {
             const ll=new mapbox.LngLat(e.features[0].geometry.coordinates[0], e.features[0].geometry.coordinates[1]);
             const prop=e.features[0].properties;
             const divElement = document.createElement('div');
