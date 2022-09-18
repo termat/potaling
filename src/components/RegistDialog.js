@@ -152,8 +152,6 @@ const useStyles = makeStyles((theme) => ({
         });
 */
 
-
-
     };
 
     const photoRead=()=>{

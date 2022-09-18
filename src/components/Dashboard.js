@@ -27,6 +27,7 @@ import {handleDialogOpen} from './FullScreenDialog'
 import Tooltip from '@material-ui/core/Tooltip';
 import Grid from '@material-ui/core/Grid';
 import RegistDialog from './RegistDialog'
+import Imagepopup from './Imagepopup'
 import {registDialogOpen} from './RegistDialog';
 
 let gpxParser = require('gpxparser');
@@ -247,6 +248,7 @@ export default function Dashboard(props) {
         </Container>
       </main>
       <FullScreenDialog open={props.window}/>
+      <Imagepopup />
       <RegistDialog />
     </div>
   );

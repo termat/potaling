@@ -6,6 +6,8 @@ import {Deck} from '@deck.gl/core';
 import * as turf from '@turf/turf'
 import {setSlider,endRunning} from './ControlBar';
 import {startPage} from './listItems';
+import {imagePop,imageClose} from './Imagepopup'
+import axios from 'axios';
 import mapbox from 'mapbox-gl/dist/mapbox-gl-csp';
 // eslint-disable-next-line import/no-webpack-loader-syntax
 import MapboxWorker from 'worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker';
@@ -26,6 +28,8 @@ let pointer;
 let angleVal=0;
 let runAni;
 
+const photo_URL="https://www.termat.net/photo/get/bounds/"
+const image_URL="https://www.termat.net/photo/get/image/"
 
 const dem={
     "type": "raster-dem",
@@ -132,6 +136,7 @@ export const fitBounds=()=>{
         [xmin, ymin],
         [xmax, ymax]
     ]);
+    addPhoto(map,xmin,xmax,ymin,ymax);
 };
 
 export const changeStyle=(style,flg)=>{
@@ -214,6 +219,12 @@ export default class MapPane extends Component {
 //            setMvt(map);
             setGeojsonLayer(map);
             setVector(map);
+            map.loadImage(
+                '/potaling/camera.png',(error, image) => {
+                    if (error) throw error;
+                    map.addImage('custom-marker', image);
+                }
+            );
             const arg=getArg(window.location.search);
             if(arg["p"]){
                 startPage(arg["p"]);
@@ -525,69 +536,66 @@ const getArg=(search)=>{
         arg[kv[0]]=kv[1];
     }
     return arg;
-  }
-
-/*
-const checkView=()=>{
-    if(!targetRoute)return;
-    if(!phase)phase=0;
-    let alongRoute = turf.along(
-        turf.lineString(targetRoute),
-        routeDistance * phase
-    ).geometry.coordinates;
-    let camera = map.getFreeCameraOptions();
-    camera.position = mapbox.MercatorCoordinate.fromLngLat({
-        lng: alongRoute[0]+camera_angle[0],
-        lat: alongRoute[1]+camera_angle[1]
-        },
-        cameraAltitude
-    ); 
-    camera.lookAtPoint({
-        lng: alongRoute[0],
-        lat: alongRoute[1]
-    });
-    map.setFreeCameraOptions(camera);
-    let point = {
-        'type': 'FeatureCollection',
-        'features': [{
-            'type': 'Feature',
-            'properties': {},
-            'geometry': {
-                'type': 'Point',
-                'coordinates': alongRoute
-            }
-        }]
-    };
-    map.getSource('point').setData(point);
-};
-*/
-/*
-class TestControl01 {
-    onAdd(map) {
-        this.map = map;
-        const bt1 = document.createElement('button');
-        bt1.innerHTML = '<button class="mapboxgl-ctrl-zoom-in" type="button" title="Zoom in" aria-label="Zoom in" aria-disabled="false"><span class="mapboxgl-ctrl-icon" aria-hidden="true"></span></button>';
-        bt1.addEventListener('click', (e) => {
-           cameraAltitude=Math.min(2000,cameraAltitude+100);
-        });
-        const bt2 = document.createElement('button');
-        bt2.innerHTML = '<button class="mapboxgl-ctrl-zoom-in" type="button" title="Zoom in" aria-label="Zoom in" aria-disabled="false"><span class="mapboxgl-ctrl-icon" aria-hidden="true"></span></button>';
-        bt2.addEventListener('click', (e) => {
-            cameraAltitude=Math.max(200,cameraAltitude-100);
-        });
-        this.container = document.createElement('div');
-        this.container.className = 'mapboxgl-ctrl mapboxgl-ctrl-group';
-        this.container.appendChild(bt1);
-        this.container.appendChild(bt2);
-        return this.container;
-    }
-  
-    onRemove() {
-        this.container.parentNode.removeChild(this.container);
-        this.map = undefined;
-    }
 }
-*/
+
+const addPhoto=(map,xmin,xmax,ymin,ymax)=>{
+    const url=photo_URL+xmin+"/"+ymin+"/"+(xmax-xmin)+"/"+(ymax-ymin);
+    axios.get(url)
+    .then(function (res) {
+        map.addSource('photo', {
+            'type': 'geojson',
+            'data': res.data
+        });
+        map.addLayer({
+            'id': 'photoId',
+            'source': 'photo',
+            'type': 'symbol',
+            'layout': {
+                'icon-image': 'custom-marker',
+                'text-size': 12,
+                "text-field":["get","title"],
+                "text-font":["NotoSansCJKjp-Regular"],
+                "text-allow-overlap": true,
+                "text-keep-upright":true,
+                "text-allow-overlap":false,
+                "symbol-z-order":"auto",
+                "text-max-width":60,
+                'text-variable-anchor':  ['top', 'bottom', 'left', 'right'],
+                'text-justify': 'auto',
+                "symbol-placement": "point",
+                "icon-offset":[0,32]
+            },
+            "paint": {
+                "text-color": "red",
+                "text-opacity": 1.0,
+                "text-halo-color": "rgba(255,255,255,0.95)",
+                "text-halo-width": 1.5,
+                "text-halo-blur": 1
+            }
+        });
+
+        map.on('click', 'photoId', function(e) {
+            const ll=new mapbox.LngLat(e.features[0].geometry.coordinates[0], e.features[0].geometry.coordinates[1]);
+            const prop=e.features[0].properties;
+            const divElement = document.createElement('div');
+            const pElement = document.createElement('p');
+            pElement.innerHTML=prop["title"]+"("+prop["date"]+")";
+            const imgElement = document.createElement('img');
+            imgElement.setAttribute("src","data:image/png;base64,"+prop["thumbnail"]);
+            imgElement.setAttribute("style","width:100%;z-index:100;");
+            imgElement.addEventListener('click', (e) => {
+                imagePop(image_URL+prop["image"]);
+            });
+            divElement.appendChild(pElement);
+            divElement.appendChild(imgElement);
+            imageClose();
+            new mapbox.Popup()
+            .setLngLat(ll)
+            .setDOMContent(divElement)
+            .addTo(map);
+        });
+    });
+};
 
 const frame=(time)=>{
     if (!start){
