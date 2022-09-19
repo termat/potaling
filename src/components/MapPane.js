@@ -256,7 +256,6 @@ export default class MapPane extends Component {
         map.on('wheel',(e)=>{
             if(running){
                 e.preventDefault();
-                console.log(e.originalEvent.deltaY>0);
                 if(e.originalEvent.deltaY>0){
                     cameraAltitude=Math.min(2000,cameraAltitude+50);
                 }else{
@@ -280,6 +279,7 @@ const move=(e)=>{
         let y1=e.point.y;
         const e2 = e.originalEvent;
         let flg=false;
+        if(e.originalEvent.altKey)flg=true;
         if (e2 && 'touches' in e2) {
             if (e2.touches.length > 1) {
                 flg=true;
@@ -574,27 +574,30 @@ const addPhoto=(map,xmin,xmax,ymin,ymax)=>{
             }
         });
 
-        map.on('touchstart', 'photoId', function(e) {
-            const ll=new mapbox.LngLat(e.features[0].geometry.coordinates[0], e.features[0].geometry.coordinates[1]);
-            const prop=e.features[0].properties;
-            const divElement = document.createElement('div');
-            const pElement = document.createElement('p');
-            pElement.innerHTML=prop["title"]+"("+prop["date"]+")";
-            const imgElement = document.createElement('img');
-            imgElement.setAttribute("src","data:image/png;base64,"+prop["thumbnail"]);
-            imgElement.setAttribute("style","width:100%;z-index:100;");
-            imgElement.addEventListener('click', (e) => {
-                imagePop(image_URL+prop["image"]);
-            });
-            divElement.appendChild(pElement);
-            divElement.appendChild(imgElement);
-            imageClose();
-            new mapbox.Popup()
-            .setLngLat(ll)
-            .setDOMContent(divElement)
-            .addTo(map);
-        });
+        map.on('touchstart', 'photoId', function(e){showPop(e);});
+        map.on('mouseenter', 'photoId', function(e){showPop(e);});
     });
+};
+
+const showPop=(e)=>{
+    const ll=new mapbox.LngLat(e.features[0].geometry.coordinates[0], e.features[0].geometry.coordinates[1]);
+    const prop=e.features[0].properties;
+    const divElement = document.createElement('div');
+    const pElement = document.createElement('p');
+    pElement.innerHTML=prop["title"]+"("+prop["date"]+")";
+    const imgElement = document.createElement('img');
+    imgElement.setAttribute("src","data:image/png;base64,"+prop["thumbnail"]);
+    imgElement.setAttribute("style","width:100%;z-index:100;");
+    imgElement.addEventListener('click', (e) => {
+        imagePop(image_URL+prop["image"]);
+    });
+    divElement.appendChild(pElement);
+    divElement.appendChild(imgElement);
+    imageClose();
+    new mapbox.Popup()
+    .setLngLat(ll)
+    .setDOMContent(divElement)
+    .addTo(map);
 };
 
 const frame=(time)=>{
