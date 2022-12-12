@@ -1,27 +1,16 @@
 {
   "files": {
-    "main.css": "/potaling/static/css/main.68170397.chunk.css",
-    "main.js": "/potaling/static/js/main.454c6783.chunk.js",
-    "main.js.map": "/potaling/static/js/main.454c6783.chunk.js.map",
-    "runtime-main.js": "/potaling/static/js/runtime-main.62b16c1c.js",
-    "runtime-main.js.map": "/potaling/static/js/runtime-main.62b16c1c.js.map",
-    "static/css/2.2c129f07.chunk.css": "/potaling/static/css/2.2c129f07.chunk.css",
-    "static/js/2.0084eb70.chunk.js": "/potaling/static/js/2.0084eb70.chunk.js",
-    "static/js/2.0084eb70.chunk.js.map": "/potaling/static/js/2.0084eb70.chunk.js.map",
-    "static/js/3.6c64eb8b.chunk.js": "/potaling/static/js/3.6c64eb8b.chunk.js",
-    "static/js/3.6c64eb8b.chunk.js.map": "/potaling/static/js/3.6c64eb8b.chunk.js.map",
+    "main.css": "/potaling/static/css/main.a9299080.css",
+    "main.js": "/potaling/static/js/main.b02374bb.js",
+    "static/js/787.dfd00227.chunk.js": "/potaling/static/js/787.dfd00227.chunk.js",
+    "static/js/mapbox-gl-csp-worker.f9ffc4b7.worker.js": "/potaling/static/js/mapbox-gl-csp-worker.f9ffc4b7.worker.js",
     "index.html": "/potaling/index.html",
-    "static/css/2.2c129f07.chunk.css.map": "/potaling/static/css/2.2c129f07.chunk.css.map",
-    "static/css/main.68170397.chunk.css.map": "/potaling/static/css/main.68170397.chunk.css.map",
-    "static/js/2.0084eb70.chunk.js.LICENSE.txt": "/potaling/static/js/2.0084eb70.chunk.js.LICENSE.txt",
-    "static/js/mapbox-gl-csp-worker.dd963a64.worker.js": "/potaling/static/js/mapbox-gl-csp-worker.dd963a64.worker.js",
-    "static/js/mapbox-gl-csp-worker.dd963a64.worker.js.map": "/potaling/static/js/mapbox-gl-csp-worker.dd963a64.worker.js.map"
+    "main.a9299080.css.map": "/potaling/static/css/main.a9299080.css.map",
+    "main.b02374bb.js.map": "/potaling/static/js/main.b02374bb.js.map",
+    "787.dfd00227.chunk.js.map": "/potaling/static/js/787.dfd00227.chunk.js.map"
   },
   "entrypoints": [
-    "static/js/runtime-main.62b16c1c.js",
-    "static/css/2.2c129f07.chunk.css",
-    "static/js/2.0084eb70.chunk.js",
-    "static/css/main.68170397.chunk.css",
-    "static/js/main.454c6783.chunk.js"
+    "static/css/main.a9299080.css",
+    "static/js/main.b02374bb.js"
   ]
 }
