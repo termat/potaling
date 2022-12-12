@@ -31,6 +31,7 @@ let runAni;
 const photo_URL="https://www.termat.net/photo/get/bounds/"
 const image_URL="https://www.termat.net/photo/get/image/"
 
+/*
 const dem={
     "type": "raster-dem",
     "tiles": [
@@ -40,7 +41,7 @@ const dem={
     "maxzoom": 14,
     "attribution": "<a href='https://maps.gsi.go.jp/development/ichiran.html'>地理院タイル</a>"
   };
-
+*/
  const mvt={
     "type": "vector",
     "glyphs": "https://maps.gsi.go.jp/xyz/noto-jp/{fontstack}/{range}.pbf",
@@ -189,7 +190,7 @@ export default class MapPane extends Component {
 
     componentDidMount() {
         map = new mapbox.Map({
-            accessToken:'pk.eyJ1IjoidGVybWF0IiwiYSI6ImNrcGprNXE2ajBjdmQybnFyMmI5d3lrN2UifQ.EyZTUEX49xUnq6i2y0Na2Q',
+            accessToken:'pk.eyJ1IjoidGVybWF0IiwiYSI6ImNsYmt2Y3U0cDAxaDczb3F4eHNhbHZpOWUifQ.9QCC9j1r-O6wQpPBU8JAFQ',
             container: this.container,
             hash: true,
             style: MapPane.PHT,
@@ -431,10 +432,13 @@ const setGeojsonLayer=(mapobj)=>{
 };
 
 const setTerrain=(mapobj)=>{
-    if (!mapobj.getSource('mapbox-dem')){
-        mapobj.addSource('mapbox-dem', dem);
-        mapobj.setTerrain({ 'source': 'mapbox-dem', 'exaggeration': 1.25 });
-    }
+    mapobj.addSource('mapbox-dem', {
+        'type': 'raster-dem',
+        'url': 'mapbox://mapbox.mapbox-terrain-dem-v1',
+        'tileSize': 512,
+        'maxzoom': 14
+        });
+    mapobj.setTerrain({'source': 'mapbox-dem', 'exaggeration': 1.5});
 };
 
 const setMvt=(mapobj)=>{
