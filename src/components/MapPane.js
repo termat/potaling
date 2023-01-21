@@ -438,7 +438,7 @@ const setTerrain=(mapobj)=>{
         'tileSize': 512,
         'maxzoom': 14
         });
-    mapobj.setTerrain({'source': 'mapbox-dem', 'exaggeration': 1.5});
+    mapobj.setTerrain({'source': 'mapbox-dem', 'exaggeration': 1.2});
 };
 
 const setMvt=(mapobj)=>{
