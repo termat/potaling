@@ -27,12 +27,16 @@ import { CancelPresentationOutlined } from "@material-ui/icons";
   export default function Imagepopup() {
     const classes = useStyles();
     const [open, setOpen] = useState(false);
-    const [image, setImage] = useState("false");
+    const [image, setImage] = useState(false);
   
     imagePop = (url) => {
         console.log(url);
         setImage(url);
         setOpen(true);
+        const close=()=>{
+          setOpen(false);
+       };
+       setTimeout(close,4000);
     };
     
     imageClose = () => {
@@ -53,7 +57,7 @@ import { CancelPresentationOutlined } from "@material-ui/icons";
               }
           }}
         >
-          <Fade in={open} timeout={500} className={classes.img}>
+          <Fade in={open} timeout={1000} className={classes.img}>
             <img
               src={image}
               alt="asd"

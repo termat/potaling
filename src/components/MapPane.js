@@ -441,35 +441,6 @@ const setTerrain=(mapobj)=>{
     mapobj.setTerrain({'source': 'mapbox-dem', 'exaggeration': 1.2});
 };
 
-const setMvt=(mapobj)=>{
-    if (!mapobj.getSource('mvt')){
-        mapobj.addSource('mvt', mvt);
-		mapobj.addLayer({
-			"id": "bldg",
-			"type": "fill-extrusion",
-			"source": "mvt",
-			"source-layer": "BUILDING",
-			"minzoom": 12,
-			"maxzoom": 17,
-			"paint": {
-				"fill-extrusion-color": [
-					'interpolate',
-					['linear'],
-					["get", "height"],
-						0,'blue',
-						10,'royalblue',
-						20,'cyan',
-						30,'lime',
-						40,'yellow',
-						50,'orange',
-						60,'red'],
-				"fill-extrusion-height": ["get", "height"],
-				'fill-extrusion-opacity': 0.75,
-			}
-		});
-    }
-};
-
 const setVector=(mapobj)=>{
     if (!mapobj.getSource('vector')){
         mapobj.addSource('vector', vector);
@@ -515,6 +486,48 @@ const setVector=(mapobj)=>{
                 "text-halo-blur": 1
             }
         });
+        mapobj.addLayer({
+                "id": "vector-bldg",
+                "type": "fill-extrusion",
+                "source": "vector",
+                "source-layer": "building",
+                "paint": {
+                    "fill-extrusion-height":[
+                            'interpolate',
+                            ['linear'],
+                            ["get", "ftCode"],
+                                3101,8.0,
+                                3102,16.0,
+                                3103,32.0,
+                                3111,4.0,
+                                3112,8.0
+                    ],
+                    "fill-extrusion-color": [
+                        'interpolate',
+                        ['linear'],
+                        [
+                            'interpolate',
+                            ['linear'],
+                            ["get", "ftCode"],
+                                3101,8.0,
+                                3102,16.0,
+                                3103,32.0,
+                                3111,4.0,
+                                3112,8.0
+                        ],
+                        0,'#333344',
+                        4,'#444455',
+                        8,'#555566',
+                        16,'#666688',
+                        32,'#777799',
+                        64,'#8888aa',
+                        128,'#9999bb',
+                        256,'#aaaacc'],
+                    'fill-extrusion-opacity': 0.9
+                }
+            }
+        );
+
     }
 };
 
@@ -598,10 +611,14 @@ const showPop=(e)=>{
     divElement.appendChild(pElement);
     divElement.appendChild(imgElement);
     imageClose();
-    new mapbox.Popup()
+    let pop=new mapbox.Popup()
     .setLngLat(ll)
     .setDOMContent(divElement)
     .addTo(map);
+    const close=()=>{
+        pop.remove();
+     };
+     setTimeout(close,2000);
 };
 
 const frame=(time)=>{
