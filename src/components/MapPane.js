@@ -458,35 +458,6 @@ const setVector=(mapobj)=>{
                 }
         });
         mapobj.addLayer({
-            "id": "label",
-            "type": "symbol",
-            "source": "vector",
-            "source-layer": "label",
-            "minzoom": 9,
-            "maxzoom": 18,
-            "layout": {
-                'text-size': 16,
-                "text-rotate":["case",["==",["get","arrng"],2],["*",["+",["to-number",["get","arrngAgl"]],90],-1],["*",["to-number",["get","arrngAgl"]],-1]],
-                "text-field":["get","knj"],
-                "text-font":["NotoSansCJKjp-Regular"],
-                "text-allow-overlap": true,
-                "text-keep-upright":true,
-                "text-allow-overlap":false,
-                "symbol-z-order":"auto",
-                "text-max-width":60,
-                'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
-                'text-justify': 'auto',
-                "symbol-placement": "point"
-            },
-            "paint": {
-                "text-color": "black",
-                "text-opacity": 1.0,
-                "text-halo-color": "rgba(255,255,255,0.95)",
-                "text-halo-width": 1.5,
-                "text-halo-blur": 1
-            }
-        });
-        mapobj.addLayer({
                 "id": "vector-bldg",
                 "type": "fill-extrusion",
                 "source": "vector",
@@ -527,7 +498,35 @@ const setVector=(mapobj)=>{
                 }
             }
         );
-
+        mapobj.addLayer({
+            "id": "label",
+            "type": "symbol",
+            "source": "vector",
+            "source-layer": "label",
+            "minzoom": 9,
+            "maxzoom": 18,
+            "layout": {
+                'text-size': 16,
+                "text-rotate":["case",["==",["get","arrng"],2],["*",["+",["to-number",["get","arrngAgl"]],90],-1],["*",["to-number",["get","arrngAgl"]],-1]],
+                "text-field":["get","knj"],
+                "text-font":["NotoSansCJKjp-Regular"],
+                "text-allow-overlap": true,
+                "text-keep-upright":true,
+                "text-allow-overlap":false,
+                "symbol-z-order":"auto",
+                "text-max-width":60,
+                'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
+                'text-justify': 'auto',
+                "symbol-placement": "point"
+            },
+            "paint": {
+                "text-color": "black",
+                "text-opacity": 1.0,
+                "text-halo-color": "rgba(255,255,255,0.95)",
+                "text-halo-width": 1.5,
+                "text-halo-blur": 1
+            }
+        });
     }
 };
 
