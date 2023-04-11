@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/potaling/static/css/main.a9299080.css",
-    "main.js": "/potaling/static/js/main.17e1912d.js",
+    "main.js": "/potaling/static/js/main.2aa2f352.js",
     "static/js/787.dfd00227.chunk.js": "/potaling/static/js/787.dfd00227.chunk.js",
     "static/js/mapbox-gl-csp-worker.f9ffc4b7.worker.js": "/potaling/static/js/mapbox-gl-csp-worker.f9ffc4b7.worker.js",
     "index.html": "/potaling/index.html",
     "main.a9299080.css.map": "/potaling/static/css/main.a9299080.css.map",
-    "main.17e1912d.js.map": "/potaling/static/js/main.17e1912d.js.map",
+    "main.2aa2f352.js.map": "/potaling/static/js/main.2aa2f352.js.map",
     "787.dfd00227.chunk.js.map": "/potaling/static/js/787.dfd00227.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.a9299080.css",
-    "static/js/main.17e1912d.js"
+    "static/js/main.2aa2f352.js"
   ]
 }
