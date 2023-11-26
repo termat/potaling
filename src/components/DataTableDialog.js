@@ -10,17 +10,14 @@ import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import Pagination from '@material-ui/core/Pagination';
 import PaginationItem from '@material-ui/core/PaginationItem';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import ImageList from '@material-ui/core/ImageList';
 import ImageListItem from '@material-ui/core/ImageListItem';
 import ImageListItemBar from '@material-ui/core/ImageListItemBar';
 import IconButton from '@material-ui/core/IconButton';
 import InfoIcon from '@material-ui/icons/Info';
-import { loadData,itemData} from './Mappanel';
-import { stop } from './DataLoader';
-import { endRunning } from './ControlBar';
-import * as d3 from 'd3';
+import { itemData} from './MapPane';
 
 function Copyright() {
   return (
@@ -39,24 +36,17 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export let handleDialogOpen;
+export let handleTableDialogOpen;
 export let handleDialogClose;
 export let getTripData;
 export let setUpPage;
 let handleChange;
 
-const jumpData=(p)=>{
-  d3.json("/geojson/"+p)
-  .then(function(data){
-    stop();
-    endRunning();
-    handleDialogClose();
-    setTimeout(loadData(data),500);
-  })
-  .catch(function(error){
-    // エラー処理
-  });
-}
+const fileRead=(data)=>{
+    const params = new URLSearchParams(window.location.search);
+    params.set('p', data); 
+    window.location.search = params.toString();
+  };
 
 export default function DataTableDialog(props) {
   const [open, setOpen] = useState(false);
@@ -64,7 +54,7 @@ export default function DataTableDialog(props) {
   const [itemList, setData] = useState([]);
   const [colnum,setColnum]= useState(4);
 
-  handleDialogOpen = () => {
+  handleTableDialogOpen = () => {
     const mql1 = window.matchMedia("(orientation: landscape)");
     if(mql1.matches){
       setColnum(4);
@@ -128,7 +118,7 @@ export default function DataTableDialog(props) {
               loading="lazy"
               width={640}
               height={480}
-              onClick={fileRead}
+              onClick={() => fileRead(item.no)}
             />
             <ImageListItemBar
               title={item.title}

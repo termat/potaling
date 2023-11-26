@@ -8,10 +8,12 @@ import {setSlider,endRunning} from './ControlBar';
 import {startPage} from './listItems';
 import {imagePop,imageClose} from './Imagepopup'
 import axios from 'axios';
+import * as d3 from 'd3';
 import mapbox from 'mapbox-gl/dist/mapbox-gl-csp';
 // eslint-disable-next-line import/no-webpack-loader-syntax
 import MapboxWorker from 'worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker';
 mapbox.workerClass = MapboxWorker;
+
 
 let targetRoute;
 let map;
@@ -220,6 +222,7 @@ export default class MapPane extends Component {
 //            setMvt(map);
             setGeojsonLayer(map);
             setVector(map);
+            createData();
             map.loadImage(
                 '/potaling/camera.png',(error, image) => {
                     if (error) throw error;
@@ -674,4 +677,18 @@ const frame=(time)=>{
     }else{
         cancelAnimationFrame(runAni);
     }
+};
+
+export const itemData = [];
+const createData=()=>{
+    let url="/potaling/pota_data.csv";
+    d3.csv(url, function(data) {
+      itemData.push(data);
+    })
+}
+
+export const loadData=(p)=>{
+    (async() => {
+        parseGeojson(map,JSON.stringify(p));
+    })();
 };
